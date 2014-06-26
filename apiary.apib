@@ -215,7 +215,6 @@ The Search endpoint returns an array of tasks matching the search parameters you
 + Parameters
     + since (optional, dateTime, `2014-06-01T17:00:00.000Z`) ... Lower bound limit for the task expressed as a timestamp in ISO 8601 format: `YYYY-MM-DDTHH:MM:SSZ`.
     + until (optional, dateTime, `2014-08-31T17:00:00.000Z`) ... Upper bound limit for the task expressed as a timestamp in ISO 8601 format: `YYYY-MM-DDTHH:MM:SSZ`.
-    + sync_token (optional, string, `MFDLJSDUiFiiuds=`) ... Specify the sync_token from the previous search request to see all tasks updated, created, and deleted since the last search request.  A sync_token may expire, in which case the server will respond with 410 GONE and the client should perform a full synchronization by querying all tasks without a sync_token specified.  Can only be used in conjuction with limit and offset params. 
     + limit (optional, number, `100`) ... Specify the total number of results you would like returned per page. Limit 1,000.
     + offset (optional, number, `100`) ... Specify the number of records to offset the results by for paging.
     + order (optional, string, `priority`) ... Specify how the results of the search shall be ordered (in ascending order). Valid types to sort by include the following: type, priority, due_date. Furthermore, the results may be sorted in descending order if you place a dash ('-') before the value (e.g. "&order=-priority").
@@ -382,10 +381,10 @@ The Search endpoint returns an array of appointments matching the search paramet
 ## Appointment Statuses Collection [/rest/v1/appointments/sync{?sync_token}&{?limit}&{?offset}]
 The sync endpoint returns 4 additional attributes along with an array of appointment statuses:
 
-- **count** - The number of appointments matching your search parameters
-- **next** - The URI for the next page of appointments. A null value means there is not a next page. 
-- **previous** - The URI for the previous page of appointments. A null value means there is not a previous page. 
-- **sync_token** - Token returned only on the last page of results. Can be used in subsequent searches to restrict the result set to only tasks updated, created, and deleted since the result set when the sync_token was returned.
+- **count** - The number of appointment statuses matching your search parameters
+- **next** - The URI for the next page of appointment statuses. A null value means there is not a next page. 
+- **previous** - The URI for the previous page of appointment statuses. A null value means there is not a previous page. 
+- **sync_token** - Token returned only on the last page of results. Can be used in subsequent searches and syncs to restrict the result set to only tasks updated, created, and deleted since the result set when the sync_token was returned.
 
 + Model (application/json)
 
@@ -438,9 +437,9 @@ The sync endpoint returns 4 additional attributes along with an array of appoint
 The Sync endpoint returns an array of appointmentStatuses based on appointments updated, created, or deleted since the result set when the sync_token was returned.
 
 + Parameters
-    + sync_token (string, `MFDLJSDUiFiiuds=`) Specify the sync_token from the previous search or sync request to see all appointments updated, created, and deleted since the last request. A sync_token may expire, in which case the server will respond with 410 GONE and the client should perform a full synchronization by querying all tasks without a sync_token specified. Can only be used in conjuction with limit and offset params.
     + limit (optional, number, `100`) ... Specify the total number of results you would like returned per page. Limit 1,000.
     + offset (optional, number, `100`) ... Specify the number of records to offset the results by for paging.
+    + sync_token (required, string, `MFDLJSDUiFiiuds=`) ... Specify the sync_token from the previous search or sync request to see all appointments updated, created, and deleted since the last request. A sync_token may expire, in which case the server will respond with 410 GONE and the client should perform a full synchronization by querying all tasks without a sync_token specified. Can only be used in conjuction with limit and offset params.
 + Response 200
 
     [Appointment Statuses Collection][]   
