@@ -1,0 +1,634 @@
+FORMAT: 1A
+HOST: https://api.infusionsoft.com/crm
+
+# Infusionsoft REST API
+## Introduction
+One of the hidden gems in the Infusionsoft suite of software is the API. The Infusionsoft API enables third-party applications to communicate with Infusionsoft and process, update, and destroy data for a wide variety of uses. You can do things like manage contacts, place orders, send messages, and most other things available for use in the Infusionsoft software.
+
+## Helper Libraries
+Infusionsoft officially supports the PHP library we created in-house. In addition, there are a number of third party helper libraries created by members of the community that may be useful to you. Many of these libraries are open source, so we encourage you to get into contact with their creators if you find bugs or have ideas for feature requests.
+
+## Additional Languages
+Additionally, we have created a number of sample files that implement the Infusionsoft API in many languages, including ASP, .Net, Java, Perl, PHP, Python, and Ruby. You can try those out for yourself by downloading all samples on Github (zip, 2.5mb)
+
+
+
+# Getting Started With OAuth2
+## Infusionsoft & OAuth 2.0
+
+The Infusionsoft REST API uses a fairly standard implementation of OAuth 2.0 in order to provide authentication to all API endpoints. In the past, the Infusionsoft API has relied on a simple token based system; while those tokens will remain active until some date in the future, any new implementations will be required to use OAuth for all requests.
+
+Rather than re-explain OAuth again, it is more useful to provide a series of documents that have already been created and demonstrate the OAuth protocol, how to implement it in your code, how to troubleshoot, and how to ease development. Before that, though, it is important to have the authorization destinations and necessary details.
+
+## Getting Started
+You can create and manage your new API keys to be used with OAuth here in the portal by visiting the API Keys page.
+
+In order to properly make requests, you'll need to know the following URLs:
+
+## Redirect URL
+This callback url must be a registered URL in your application. We will not redirect users to any other URLs, so it is important this be properly setup before any authentication attempts.
+
+Note: This url must use the HTTPS protocol with a valid certificate.
+
+## Authorization Endpoint
+https://signin.infusionsoft.com/app/oauth/authorize
+
+## Token Endpoint
+https://api.infusionsoft.com/token
+
+## Final Request URL
+Once you've received your access token, you can make XML-RPC requests at the following location:
+
+https://api.infusionsoft.com/crm/xmlrpc/v1?access_token=ACCESSTOKEN 
+
+## A Note on the API Key Field
+In your final request to a method, you must still include the API key field in your XML-RPC request. This can be any value, so something such as your access token is perfectly appropriate.
+
+## Resources
+
+Check out the Official OAuth2 website to learn more about the protocol and how it works.
+
+Test out your requests in IO Docs which will handle token negotiation for you.
+
+Generate tokens with Runscope's fantastic Token Generator and then use Runscope to assist in debugging your API requests within your application.
+
+If you're using the Infusionsoft PHP library, you can start using a version of the PHP SDK with OAuth.
+
+
+
+# Group Tasks
+With the Task endpoints you can search, create, put, patch and destroy tasks in Infusionsoft. 
+
+**NOTE:**  You may only create tasks for the user you are authenticated as. 
+
+## Task [/rest/v1/tasks/{id}]
+A single Task object. 
+
+The Task resource has the following attributes:
+
+- id
+- title
+- description
+- type
+- priority
+- due_date
+- creation_date
+- modification_date
+- completed
+
+To save you from having to make an additional API call, we also return the following data about the contact associated with the task:
+
+- id
+- first_name
+- last_name
+- email
+
+The attributes *id*, *date_created* and *modification_date* are assigned by the Infusionsoft API at the moment the task record is created. 
+
+
++ Parameters
+    + id (string) ... ID of the Task in the form of a hash.
+
++ Model (application/json)
+
+    JSON representation of a Task Resource.
+
+    + Body
+            
+            {
+                "id":3,
+                "title":"Birthday",
+                "description":"Wrap presents",
+                "type":"Other",
+                "priority":2,
+                "due_date":"2014-06-17T17:12:52.000Z",
+                "creation_date":"2014-06-17T17:12:52.000Z",
+                "modified_date":"2014-06-12T05:00:00.000Z",
+                "completed":false,
+                "contact":{
+                    "id":0,
+                    "first_name":"John",
+                    "last_name":"Smith",
+                    "email":"john.smith@infusionsoft.com"
+                }
+                "url":"https://api.infusiontest.com/crm/rest/v1/tasks/3"
+            }
+
+### Retrieve a Single Task [GET]
+To retrieve a single task simply submit a request to the task endpoint with the task *id*. 
++ Response 200
+
+    [Task][]
+
+### Replace a Task [PUT]
+To replace an existing task send a JSON with one or more of the task resource attributes. Attribute values (states) from the previous version of this task will not be carried over. Any value not specified will be replaced with null.
+
++ Request (application/json)
+
+        {
+            "title": "Replaced title name"
+        }
+
++ Response 200
+
+    [Task][]
+
+### Update a Task [PATCH]
+To update a task send a JSON with one or more updated values of the task resource attributes. All attribute values (states) from the previous version of this task are carried over by default if not included in the hash.
+
++ Request (application/json)
+
+        {
+            "title": "Updated title name"
+        }
+
++ Response 200
+
+    [Task][]
+
+### Delete an Task [DELETE]
++ Response 201
+
+
+## Tasks Collection [/rest/v1/tasks/search{?since}&{?until}&{?sync_token}&{?limit}&{?offset}&{?order}]
+The search endpoint returns 4 additional attributes along with an array of tasks:
+
+- **count** - The number of tasks matching your search parameters
+- **next** - The URI for the next page of tasks. A null value means there is not a next page. 
+- **previous** - The URI for the previous page of tasks. A null value means there is not a previous page. 
+- **sync_token** - Token returned only on the last page of results. Can be used in subsequent searches to restrict the result set to only tasks updated, created, and deleted since the result set when the sync_token was returned. 
+
++ Model (application/json)
+
+    JSON representation of a Task Collection Resource.
+
+
+
+    + Body
+
+            {
+                "tasks": [
+                {
+                    "id":3,
+                    "title":"Birthday",
+                    "description":"Wrap presents",
+                    "type":"Other",
+                    "priority":2,
+                    "due_date":"2014-06-17T17:12:52.000Z",
+                    "creation_date":"2014-06-17T17:12:52.000Z",
+                    "modified_date":"2014-06-12T05:00:00.000Z",
+                    "completed":false,
+                    "contact":{
+                        "id":0,
+                        "first_name":"John",
+                        "last_name":"Smith",
+                        "email":"john.smith@someurl.com"
+                    }
+                    "url":"https://api.infusiontest.com/crm/rest/v1/tasks/3"
+                }
+                    {
+                        "id":4,
+                        "title":"Run around",
+                        "description":"Don't carry scissors",
+                        "type":"Other",
+                        "priority":2,
+                        "due_date":"2014-06-17T17:12:52.000Z",
+                        "creation_date":"2014-06-17T17:12:52.000Z",
+                        "modified_date":"2014-06-12T05:00:00.000Z",
+                        "completed":false,
+                        "contact":{
+                            "id":0,
+                            "first_name":"Ammon",
+                            "last_name":"Curtis",
+                            "email":"ammon.curtis@someurl.com"
+                        }
+                        "url":"https://api.infusiontest.com/crm/rest/v1/tasks/3"
+                    }
+                ],
+                "count": 2,
+                "next": null,
+                "previous": null,
+                "sync_token": "MFDLJSDUiFiiuds"
+            }
+            
+### Search for Task [GET]
+The Search endpoint returns an array of tasks matching the search parameters you supplied. All parameters are optional. If your make a call to the search endpoint without passing the *since* or *until* paramenters the endpoint will return all appointments for the authenticated user (past, present and future). 
+
++ Parameters
+    + since (optional, dateTime, `2014-06-01T17:00:00.000Z`) ... Lower bound limit for the task expressed as a timestamp in ISO 8601 format: `YYYY-MM-DDTHH:MM:SSZ`.
+    + until (optional, dateTime, `2014-08-31T17:00:00.000Z`) ... Upper bound limit for the task expressed as a timestamp in ISO 8601 format: `YYYY-MM-DDTHH:MM:SSZ`.
+    + sync_token (optional, string, `MFDLJSDUiFiiuds=`) ... Specify the sync_token from the previous search request to see all tasks updated, created, and deleted since the last search request.  A sync_token may expire, in which case the server will respond with 410 GONE and the client should perform a full synchronization by querying all tasks without a sync_token specified.  Can only be used in conjuction with limit and offset params. 
+    + limit (optional, number, `100`) ... Specify the total number of results you would like returned per page. Limit 1,000.
+    + offset (optional, number, `100`) ... Specify the number of records to offset the results by for paging.
+    + order (optional, string, `priority`) ... Specify how the results of the search shall be ordered (in ascending order). Valid types to sort by include the following: type, priority, due_date. Furthermore, the results may be sorted in descending order if you place a dash ('-') before the value (e.g. "&order=-priority").
++ Response 200
+
+    [Tasks Collection][]    
+
+### Create an Task [POST]
+To create an tast=k simply provide the JSON hash of the task *title*, *startDate*, and *endDate*. All other attributes are optional. When you create a new task, the *userId* is automattically set to the *userId* of the authenticated user making the request.
++ Request (application/json)
+
+        {
+            "title": "A new task title",
+            "description": "We are doing something fun.",
+            "id": "321"
+        }
+
++ Response 201 (application/json)
+
+    [Task][]
+
+
+
+# Group Appointments
+With the Appointment endpoints you can search, create, put, patch and destroy appointments in Infusionsoft. 
+**NOTE:**  You may only create appointments for the user you are authenticated as. 
+
+## Appointment [/rest/v1/appointments/{id}]
+A single Appointment object. 
+
+The Appointment resource has the following attributes:
+
+- id
+- title
+- description
+- creation_date
+- start_date
+- end_date
+- remind_time
+- location
+
+The attributes *id*, *date_created* and *last_updated* are assigned by the Infusionsoft API at the moment the appointment record is created. 
+
+
++ Parameters
+    + id (string) ... ID of the Appointment in the form of a hash.
+
++ Model (application/json)
+
+    JSON representation of an Appointment Resource.
+
+
+    + Body
+
+            {
+                "id": "42",
+                "title": "Really Cool Task",
+                "description": "Description of Gist",
+                "creation_date": "2014-07-07T17:58:34.000Z",
+                "start_date": "2014-07-10T17:00:00.000Z",
+                "end_date": "2014-07-10T18:00:00.000Z",
+                "remind_time": "15",
+                "location": "Starbucks",
+                "url": "https://api.infusionsoft.com/crm/rest/v1/appointments/3"
+            }
+
+### Retrieve a Single Appointment [GET]
+To retrieve a single appoointment simply submit a request to the appointment endpoint with the appointment *id*. 
++ Response 200
+
+    [Appointment][]
+
+### Replace an Appointment [PUT]
+To replace an existing appointment send a JSON with one or more of an appointment resource attributes. Attribute values (states) from the previous version of this appointment will not be carried over. Any value not specified will be replaced with null.
+
++ Request (application/json)
+
+        {
+            "title": "Replaced title name"
+        }
+
++ Response 200
+
+    [Appointment][]
+
+### Update an Appointment [PATCH]
+To update an appointment send a JSON with one or more updated values of the task resource attributes. All attribute values (states) from the previous version of this task are carried over by default if not included in the hash.
+
++ Request (application/json)
+
+        {
+            "title": "Updated title name"
+        }
+
++ Response 200
+
+    [Appointment][]
+
+### Delete an Appointment [DELETE]
++ Response 201
+
+
+## Appointments Collection [/rest/v1/appointments/search{?since}&{?until}&{?limit}&{?offset}]
+The search endpoint returns 3 additional attributes along with an array of appointments:
+
+- **count** - The number of appointments matching your search parameters
+- **next** - The URI for the next page of appointments. A null value means there is not a next page. 
+- **previous** - The URI for the previous page of appointments. A null value means there is not a previous page. 
+
++ Model (application/json)
+
+    JSON representation of an Appointment Collection Resource.
+
+    + Headers
+
+            Key: value
+
+    + Body
+
+            {
+                "appointments": [
+                    {
+                        "id": "3",
+                        "title": "Really Cool Task",
+                        "description": "Description of Gist",
+                        "creation_date": "2014-07-07T17:58:34.000Z",
+                        "start_date": "2014-07-10T17:00:00.000Z",
+                        "end_date": "2014-07-10T18:00:00.000Z",
+                        "remind_time": "15",
+                        "location": "Starbucks",
+                        "url": "https://api.infusionsoft.com/crm/rest/v1/appointments/3"
+                    },
+                    {
+                        "id": "4",
+                        "title": "Another Really Cool Task",
+                        "description": "Description of something cool",
+                        "creation_date": "2014-07-07T17:58:34.000Z",
+                        "start_date": "2014-07-10T17:00:00.000Z",
+                        "end_date": "2014-07-10T18:00:00.000Z",
+                        "remind_time": "15",
+                        "location": "Peter Piper Pizza",
+                        "url": "https://api.infusionsoft.com/crm/rest/v1/appointments/4"
+                    }
+                ],
+                "count": 2,
+                "next": null,
+                "previous": null
+            }
+            
+### Search for Appointments [GET]
+The Search endpoint returns an array of appointments matching the search parameters you supplied. All parameters are optional. If your make a call to the search endpoint without passing the *since* or *until* paramenters the endpoint will return all appointments for the authenticated user (past, present and future). 
+
++ Parameters
+    + since (optional, dateTime, `2014-06-01T17:00:00.000Z`) ... Lower bound limit for the appointment expressed as a timestamp in ISO 8601 format: `YYYY-MM-DDTHH:MM:SSZ`.
+    + until (optional, dateTime, `2014-08-31T17:00:00.000Z`) ... Upper bound limit for the appointment expressed as a timestamp in ISO 8601 format: `YYYY-MM-DDTHH:MM:SSZ`.
+    + limit (optional, number, `100`) ... Specify the total number of results you would like returned per page. Limit 1,000.
+    + offset (optional, number, `100`) ... Specify the number of records to offset the results by for paging.
++ Response 200
+
+    [Appointments Collection][]    
+
+### Create an Appointment [POST]
+To create an appointment simply provide the JSON hash of the appointment *title*, *start_date*, and *end_date*. All other attributes are optional. When you create a new task, the *user_id* is automattically set to the *userId* of the authenticated user making the request.
++ Request (application/json)
+
+        {
+            "title": "A new task title",
+            "description": "We are doing something fun.",
+            "start_date": "2014-07-10T17:00:00.000Z",
+            "end_date": "2014-07-10T18:00:00.000Z",
+            "remind_time": "15",
+            "location": "McDonalds"
+        }
+
++ Response 201 (application/json)
+
+    [Appointment][]
+
+
+# Group Notes
+With the Appointment endpoints you can search, create, put, patch and destroy appointments in Infusionsoft. 
+**NOTE:**  You may only create appointments for the user you are authenticated as. 
+
+## Note [/rest/v1/notes/{id}]
+A single Note object. 
+
+The Note resource has the following attributes:
+
+- id
+- subject
+- contents
+- action_type
+- creation_date
+- modification_date
+
+The attributes *id*, *creation_date* and *modification_date* are assigned by the Infusionsoft API at the moment the note record is created. 
+
+
++ Parameters
+    + id (string) ... ID of the Note in the form of a hash.
+
++ Model (application/json)
+
+    JSON representation of an Note Resource.
+
+
+    + Body
+
+            {
+                "id": "42",
+                "title": "Note to self",
+                "subject": "Description of Gist",
+                "action_type": "Call",
+                "creation_date": "2014-07-07T17:58:34.000Z",
+                "modification_date": "2014-08-07T17:58:34.000Z",
+                "url": "https://api.infusionsoft.com/crm/rest/v1/notes/42"
+            }
+
+### Retrieve a Single Note [GET]
+To retrieve a single note simply submit a request to the appointment endpoint with the note *id*. 
++ Response 200
+
+    [Note][]
+
+### Edit an Note [PATCH]
+To update an Note send a JSON with updated value for one or more of the Note resource attributes. All attributes values (states) from the previous version of this Note are carried over by default if not included in the hash.
+
++ Request (application/json)
+
+        {
+            "title": "Updated title name"
+        }
+
++ Response 200
+
+    [Note][]
+
+### Delete an Note [DELETE]
++ Response 204
+
+
+## Notes Collection [/rest/v1/notes/search{?since}&{?until}&{?limit}&{?offset}]
+The search endpoint returns 3 additional attributes along with an array of notes:
+
+- **count** - The number of notes matching your search parameters
+- **next** - The URI for the next page of notes. A null value means there is not a next page. 
+- **previous** - The URI for the previous page of notes. A null value means there is not a previous page. 
+
++ Model (application/json)
+
+    JSON representation of an Note Collection Resource.
+
+    + Headers
+
+            Key: value
+
+    + Body
+
+            {
+                "notes": [
+                    {
+                        "id": "42",
+                        "title": "Note to self",
+                        "subject": "Description of Gist",
+                        "action_type": "Call",
+                        "creation_date": "2014-07-07T17:58:34.000Z",
+                        "modification_date": "2014-08-07T17:58:34.000Z",
+                        "url": "https://api.infusionsoft.com/crm/rest/v1/notes/42"
+                    },
+                    {
+                        "id": "43",
+                        "title": "Note to self",
+                        "subject": "Description of Gist",
+                        "action_type": "Call",
+                        "creation_date": "2014-07-07T17:58:34.000Z",
+                        "modification_date": "2014-08-07T17:58:34.000Z",
+                        "url": "https://api.infusionsoft.com/crm/rest/v1/notes/43"
+                    }
+                ],
+                "count": 2,
+                "next": null,
+                "previous": null
+            }
+            
+### Search for Notes [GET]
+The Search endpoint returns an array of notes matching the search parameters you supplied. All parameters are optional. If your make a call to the search endpoint without passing the *since* or *until* paramenters the endpoint will return all notes for the authenticated user (past, present and future). 
+
++ Parameters
+    + since (optional, dateTime, `2014-06-01T17:00:00.000Z`) ... Lower bound limit for the appointment expressed as a timestamp in ISO 8601 format: `YYYY-MM-DDTHH:MM:SSZ`.
+    + until (optional, dateTime, `2014-08-31T17:00:00.000Z`) ... Upper bound limit for the appointment expressed as a timestamp in ISO 8601 format: `YYYY-MM-DDTHH:MM:SSZ`.
+    + limit (optional, number, `100`) ... Specify the total number of results you would like returned per page. Limit 1,000.
+    + offset (optional, number, `100`) ... Specify the number of records to offset the results by for paging.
++ Response 200
+
+    [Notes Collection][]    
+
+### Create an Appointment [POST]
+To create an appointment simply provide the JSON hash of the appointment *title*, *start_date*, and *end_date*. All other attributes are optional. When you create a new task, the *user_id* is automattically set to the *user_id* of the authenticated user making the request.
++ Request (application/json)
+
+        {
+            "id": "42",
+            "title": "Note to self",
+            "subject": "Description of Gist",
+            "action_type": "Call",
+            "creation_date": "2014-07-07T17:58:34.000Z",
+            "modification_date": "2014-08-07T17:58:34.000Z",
+            "url": "https://api.infusionsoft.com/crm/rest/v1/notes/42"
+        }
+
++ Response 201 (application/json)
+
+    [Note][]
+  
+
+# Group Interaction
+The Interaction Service is an internal only API designed for our Mobile Applications. The Interaction Service is used to sync the *Recent* screens between multiple devices.  
+
+
+## Interaction [/rest/v1/interactions/{id}]
+A single Interaction object. 
+
+The Interaction resource has the following attributes:
+
+- infusionsoft_app_id
+- cas_global_id
+- contact_id
+- interaction
+- data
+- platform
+- interaction_date
+
++ Parameters
+    + id (string) ... ID of the Interaction in the form of a hash.
+
++ Model (application/json)
+
+    JSON representation of a Interaction Resource.
+
+    + Body
+            
+            {
+                "infusionsoft_app_id":3,
+                "cas_global_id":"Birthday",
+                "contact_id":"Wrap presents",
+                "interaction":"Other",
+                "data":2,
+                "platform":"2014-06-17T17:12:52.000Z",
+                "interaction_date":"2014-06-17T17:12:52.000Z",
+            }
+
+### Retrieve a List of interactions [GET]
+To retrieve a list of interactions. 
++ Response 200
+
+    [Interaction][]
+
+
+    
+    
+# Group Contacts
+Information about the Contact endpoints.
+
+## Contact [/rest/v1/contacts/{id}]
+A single Contact object. 
+
+The Contact resource has the following attributes:
+
+- id
+- first_name
+- last_name
+- nickname
+- email1
+- email2
+- location
+- preferred_communication
+
+The states *id*, and *creation_date* are assigned by the Infusionsoft API at the moment of creation. 
+
+
++ Parameters
+    + id (string) ... ID of the Contact in the form of a hash.
+
++ Model (application/json)
+
+    JSON representation of an Contact Resource.
+
+    + Body
+
+            {
+                "id": "42",
+                
+            }
+
+### Retrieve a Single Contact [GET]
++ Response 200
+
+    [Contact][]
+
+### Edit an Contact [PATCH]
+To update an Contact send a JSON with updated value for one or more of the Contact resource attributes. All attributes values (states) from the previous version of this Contact are carried over by default if not included in the hash.
+
++ Request (application/json)
+
+        {
+            "title": "Updated title name"
+        }
+
++ Response 200
+
+    [Contact][]
+
+### Delete an Contact [DELETE]
++ Response 204
