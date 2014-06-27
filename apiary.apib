@@ -150,10 +150,10 @@ To update a task send a JSON with one or more updated values of the task resourc
 + Response 201
 
 
-## Tasks Collection [/rest/v1/tasks/search{?since}&{?until}&{?limit}&{?offset}&{?order}]
-The search endpoint returns 4 additional attributes along with an array of tasks:
+## Tasks Collection [/rest/v1/tasks/search(?since,until,limit,offset,order}]
+The search endpoint returns 3 additional attributes along with an array of tasks:
 
-- **count** - The number of tasks matching your search parameters
+- **count** - The number of tasks matching your search parameters.
 - **next** - The URI for the next page of tasks. A null value means there is not a next page. 
 - **previous** - The URI for the previous page of tasks. A null value means there is not a previous page. 
 
@@ -223,7 +223,7 @@ The Search endpoint returns an array of tasks matching the search parameters you
     [Tasks Collection][]    
 
 ### Create an Task [POST]
-To create an tast=k simply provide the JSON hash of the task *title*, *startDate*, and *endDate*. All other attributes are optional. When you create a new task, the *userId* is automattically set to the *userId* of the authenticated user making the request.
+To create an task simply provide the JSON hash of the task *title*, *startDate*, and *endDate*. All other attributes are optional. When you create a new task, the *userId* is automattically set to the *userId* of the authenticated user making the request.
 + Request (application/json)
 
         {
@@ -317,7 +317,7 @@ To update an appointment send a JSON with one or more updated values of the task
 + Response 201
 
 
-## Appointments Collection [/rest/v1/appointments/search{?sync_token}&{?since}&{?until}&{?limit}&{?offset}]
+## Appointments Collection [/rest/v1/appointments/search{?sync_token,since,until,limit,offset}]
 The search endpoint returns 4 additional attributes along with an array of appointments:
 
 - **count** - The number of appointments matching your search parameters
@@ -378,7 +378,7 @@ The Search endpoint returns an array of appointments matching the search paramet
 
     [Appointments Collection][]    
     
-## Appointment Statuses Collection [/rest/v1/appointments/sync{?sync_token}&{?limit}&{?offset}]
+## Appointment Statuses Collection [/rest/v1/appointments/sync{?sync_token,limit,offset}]
 The sync endpoint returns 4 additional attributes along with an array of appointment statuses:
 
 - **count** - The number of appointment statuses matching your search parameters
@@ -524,7 +524,7 @@ To update an Note send a JSON with updated value for one or more of the Note res
 + Response 204
 
 
-## Notes Collection [/rest/v1/notes/search{?since}&{?until}&{?limit}&{?offset}]
+## Notes Collection [/rest/v1/notes/search{?since,until,limit,offset}]
 The search endpoint returns 3 additional attributes along with an array of notes:
 
 - **count** - The number of notes matching your search parameters
