@@ -5,46 +5,46 @@ HOST: https://api.infusionsoft.com/crm
 ## Introduction
 One of the hidden gems in the Infusionsoft suite of software is the API. The Infusionsoft API enables third-party applications to communicate with Infusionsoft and process, update, and destroy data for a wide variety of uses. You can do things like manage contacts, place orders, send messages, and most other things available for use in the Infusionsoft software.
 
-## Helper Libraries
+### Helper Libraries
 Infusionsoft officially supports the PHP library we created in-house. In addition, there are a number of third party helper libraries created by members of the community that may be useful to you. Many of these libraries are open source, so we encourage you to get into contact with their creators if you find bugs or have ideas for feature requests.
 
-## Additional Languages
+### Additional Languages
 Additionally, we have created a number of sample files that implement the Infusionsoft API in many languages, including ASP, .Net, Java, Perl, PHP, Python, and Ruby. You can try those out for yourself by downloading all samples on [Github (zip, 2.5mb)](https://github.com/infusionsoft/API-Sample-Code/archive/master.zip)
 
 
 
-# Getting Started With OAuth2
-## Infusionsoft & OAuth 2.0
+## Getting Started With OAuth2
+### Infusionsoft & OAuth 2.0
 
 The Infusionsoft REST API uses a fairly standard implementation of OAuth 2.0 in order to provide authentication to all API endpoints. In the past, the Infusionsoft API has relied on a simple token based system; while those tokens will remain active until some date in the future, any new implementations will be required to use OAuth for all requests.
 
 Rather than re-explain OAuth again, it is more useful to provide a series of documents that have already been created and demonstrate the OAuth protocol, how to implement it in your code, how to troubleshoot, and how to ease development. Before that, though, it is important to have the authorization destinations and necessary details.
 
-## Getting Started
+### Getting Started
 You can create and manage your new API keys to be used with OAuth here in the portal by visiting the [API Keys page](https://developer.infusionsoft.com/apps/mykeys).
 
 In order to properly make requests, you'll need to know the following URLs:
 
-## Redirect URL
+### Redirect URL
 This callback url must be a registered URL in your application. We will not redirect users to any other URLs, so it is important this be properly setup before any authentication attempts.
 
 Note: This url must use the HTTPS protocol with a valid certificate.
 
-## Authorization Endpoint
+### Authorization Endpoint
 https://signin.infusionsoft.com/app/oauth/authorize
 
-## Token Endpoint
+### Token Endpoint
 https://api.infusionsoft.com/token
 
-## Final Request URL
+### Final Request URL
 Once you've received your access token, you can make XML-RPC requests at the following location:
 
 https://api.infusionsoft.com/crm/xmlrpc/v1?access_token=ACCESSTOKEN 
 
-## A Note on the API Key Field
+### A Note on the API Key Field
 In your final request to a method, you must still include the API key field in your XML-RPC request. This can be any value, so something such as your access token is perfectly appropriate.
 
-## Resources
+### Resources
 
 Check out the [Official OAuth2 website](http://oauth.net/2/) to learn more about the protocol and how it works.
 
