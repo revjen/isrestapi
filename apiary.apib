@@ -156,7 +156,7 @@ To update a task send a JSON with one or more updated values of the task resourc
 
     [Task][]
 
-### Delete an Task [DELETE]
+### Delete a Task [DELETE]
 + Response 201
 
 
@@ -221,7 +221,7 @@ The search endpoint returns 3 additional attributes along with an array of tasks
                 "previous": null
             }
             
-### Search for Task [GET]
+### Search for a Task [GET]
 The Search endpoint returns an array of tasks matching the search parameters you supplied. All parameters are optional. If your make a call to the search endpoint without passing the *since* or *until* paramenters the endpoint will return all appointments for the authenticated user (past, present and future). 
 
 + Parameters
@@ -234,8 +234,8 @@ The Search endpoint returns an array of tasks matching the search parameters you
 
     [Tasks Collection][]    
 
-### Create an Task [POST]
-To create an task simply provide the JSON hash of the task *title*, *startDate*, and *endDate*. All other attributes are optional. When you create a new task, the *userId* is automattically set to the *userId* of the authenticated user making the request.
+### Create a Task [POST]
+To create a task simply provide the JSON hash of the task, containing at least the fields *title*, *startDate*, and *endDate*. All other attributes are optional. When you create a new task, the *userId* is automattically set to the *userId* of the authenticated user making the request.
 + Request (application/json)
 
         {
@@ -392,7 +392,7 @@ The Search endpoint returns an array of appointments matching the search paramet
   
 
 ### Create an Appointment [POST]
-To create an appointment simply provide the JSON hash of the appointment *title*, *start_date*, and *end_date*. All other attributes are optional. When you create a new task, the *user_id* is automattically set to the *userId* of the authenticated user making the request.
+To create an appointment simply provide the JSON hash of the appointment, containing at least the fields *title*, *start_date*, and *end_date*. All other attributes are optional. When you create a new task, the *user_id* is automattically set to the *userId* of the authenticated user making the request.
 + Request (application/json)
 
         {
