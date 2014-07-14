@@ -615,12 +615,12 @@ To create an appointment simply provide the JSON hash of the appointment *title*
     [Note][]
   
 
-# Group Interaction
+# Group Interactions
 The Interaction Service is an internal only API designed for our Mobile Applications. The Interaction Service is used to sync the *Recent* screens between multiple devices.  
 
 
-## Interaction [/rest/v1/interactions/{id}]
-A single Interaction object. 
+## Interactions [/rest/v1/interactions/{?max}]
+An array of interactions.
 
 The Interaction resource has the following attributes:
 
@@ -633,7 +633,8 @@ The Interaction resource has the following attributes:
 - interaction_date
 
 + Parameters
-    + id (string) ... ID of the Interaction.
+    + max (required, number, `5`) ... Specify the total number of results you would like returned. Limit 250.
+   
 
 + Model (application/json)
 
@@ -641,7 +642,7 @@ The Interaction resource has the following attributes:
 
     + Body
             
-            {
+            [{
                 "infusionsoft_app_id":3,
                 "cas_global_id":"Birthday",
                 "contact_id":"Wrap presents",
@@ -649,16 +650,93 @@ The Interaction resource has the following attributes:
                 "data":2,
                 "platform":"2014-06-17T17:12:52.000Z",
                 "interaction_date":"2014-06-17T17:12:52.000Z",
-            }
+            }]
 
 ### Retrieve a List of interactions [GET]
 To retrieve a list of interactions. 
 + Response 200
 
-    [Interaction][]
+    [Interactions][]
 
+## Interactions For Contact [/rest/v1/interactions/list_for_contact{?max,contact_id}]
+An array of interactions.
 
+The Interaction resource has the following attributes:
+
+- infusionsoft_app_id
+- cas_global_id
+- contact_id
+- interaction
+- data
+- platform
+- interaction_date
+
++ Parameters
+    + max (required, number, `5`) ... Specify the total number of results you would like returned. Limit 250.
+    + contact_id (required, number, `34567`) ... Specify the contact id associated with the interactions that you would like returned.
+   
+
++ Model (application/json)
+
+    JSON representation of a Interaction Resource.
+
+    + Body
+            
+            [{
+                "infusionsoft_app_id":3,
+                "cas_global_id":"Birthday",
+                "contact_id":"Wrap presents",
+                "interaction":"Other",
+                "data":2,
+                "platform":"2014-06-17T17:12:52.000Z",
+                "interaction_date":"2014-06-17T17:12:52.000Z",
+            }]
     
+### Retrieve a List of interactions for a specified contact id [GET]
+To retrieve a list of interactions. 
++ Response 200
+
+    [Interactions For Contact][]
+
+## Interactions For Contacts [/rest/v1/interactions/list_for_contact{?max,contact_ids}]
+An array of interactions.
+
+The Interaction resource has the following attributes:
+
+- infusionsoft_app_id
+- cas_global_id
+- contact_id
+- interaction
+- data
+- platform
+- interaction_date
+
++ Parameters
+    + max (required, number, `5`) ... Specify the total number of results you would like returned. Limit 250.
+    + contact_ids (required, array, `[34567,33333]`) ... Specify the contact ids associated with the interactions that you would like returned.
+   
+
++ Model (application/json)
+
+    JSON representation of a Interaction Resource.
+
+    + Body
+            
+            [{
+                "infusionsoft_app_id":3,
+                "cas_global_id":"Birthday",
+                "contact_id":"Wrap presents",
+                "interaction":"Other",
+                "data":2,
+                "platform":"2014-06-17T17:12:52.000Z",
+                "interaction_date":"2014-06-17T17:12:52.000Z",
+            }]
+    
+### Retrieve a List of interactions for a specified contact id [GET]
+To retrieve a list of interactions. 
++ Response 200
+
+    [Interactions For Contact][]
     
 # Group Contacts
 Information about the Contact endpoints.
