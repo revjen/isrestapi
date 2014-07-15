@@ -392,7 +392,8 @@ The Search endpoint returns an array of appointments matching the search paramet
     [Appointments Collection][]    
   
 
-### Create an Appointment [POST]
+## Appointments Creation [/rest/v1/appointments] 
+### Create an Appointment[POST]
 To create an appointment simply provide the JSON hash of the appointment, containing at least the fields *title*, *start_date*, and *end_date*. All other attributes are optional. When you create a new task, the *user_id* is automattically set to the *userId* of the authenticated user making the request.
 + Request (application/json)
 
@@ -805,9 +806,7 @@ some description of task permissions.
 - user_id
 - permission
 
-valid permissions are (insert stuff here somehow).
-- Read
-- Write
+valid permissions are (insert stuff here somehow): Read, Write, etc.
 
 + Parameters
     + id (string) ... unique identifier of this permission
@@ -823,3 +822,19 @@ valid permissions are (insert stuff here somehow).
                 "user_id": "32",
                 "permission": "Read"
             }
+
+### Retrieve a Single Permission [GET]
++ Response 200
+
+    [Tasks Permissions][]
+    
+### Create a Single Permission [POST]
+Describe here.
++ Request (application/json)
+
+        {
+            "user_id": "42",
+            "permission": "Read"
+        }    
+### Delete a Contact [DELETE]
++ Response 204
