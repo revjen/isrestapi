@@ -794,3 +794,32 @@ To update an Contact send a JSON with updated value for one or more of the Conta
 
 ### Delete a Contact [DELETE]
 + Response 204
+
+# Group Permissions
+Add information about the permissions and stuff here
+
+## Tasks Permissions [/rest/v1/permissions/tasks/{id}]
+some description of task permissions.
+
+- id
+- user_id
+- permission
+
+valid permissions are (insert stuff here somehow).
+- Read
+- Write
+
++ Parameters
+    + id (string) ... unique identifier of this permission
+
++ Model (application/json)
+
+    JSON representation of an Contact Resource.
+
+    + Body
+
+            {
+                "id": "1",
+                "user_id": "32",
+                "permission": "Read"
+            }
