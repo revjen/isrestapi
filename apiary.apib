@@ -846,7 +846,7 @@ Describe here.
 + Response 201
     [Tasks Permission][]
 
-### Task Permission Collection [/rest/v1/permissions/notes/search{?user_id,permission}]
+### Task Permission Collection [/rest/v1/permissions/tasks/search{?user_id,permission}]
 
 + Model (application/json)
 
@@ -880,3 +880,84 @@ The Search endpoint returns an array of permissions matching the search paramete
 + Response 200
 
     [Task Permission Collection][]    
+  
+# Group Permissions  
+## Notes Permissions
+### Notes Permission [/rest/v1/permissions/notes/{id}]
+some description of note permissions.
+
+- id
+- user_id
+- permission
+
+valid permissions are (insert stuff here somehow): Read, Write, etc.
+
++ Parameters
+    + id (string) ... unique identifier of this permission
+
++ Model (application/json)
+
+    JSON representation of a note permission Resource.
+
+    + Body
+
+            {
+                "id": "1",
+                "user_id": "32",
+                "permission": "Read"
+            }
+
+#### Retrieve a Single Permission [GET]
++ Response 200
+
+    [Notes Permission][]
+    
+#### Delete a Permission [DELETE]
++ Response 204
+
+### Note Permission Creation [/rest/v1/permissions/notes/] 
+#### Create a Single Permission [POST]
+Describe here.
++ Request (application/json)
+
+        {
+            "user_id": "42",
+            "permission": "Read"
+        }
++ Response 201
+    [Notes Permission][]
+
+### Note Permission Collection [/rest/v1/permissions/notes/search{?user_id,permission}]
+
++ Model (application/json)
+
+    JSON representation of an Note Collection Resource.
+
+    + Headers
+
+            Key: value
+
+    + Body
+
+            {
+                "permissions": [
+                    {
+                        "user_id": "42",
+                        "permission": "read",
+                    },
+                    {
+                        "user_id": "42",
+                        "permission": "write",
+                    }
+                ]
+            }
+            
+#### Search for Permissions [GET]
+The Search endpoint returns an array of permissions matching the search parameters you supplied. All parameters are optional. If your make a call to the search endpoint without passing the *user_id* or *permission* paramenters the endpoint will return all permissions for the authenticated user. 
+
++ Parameters
+    + user_id (optional, String, `42`) ... the user_id of the user for whom you'd like to know what permissions they have.
+    + permission (optional, String, `read`) ... all user-permission pairs will be returned if the requesting user is the owner.
++ Response 200
+
+    [Note Permission Collection][]    
