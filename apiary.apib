@@ -818,7 +818,7 @@ A Task Permission contains the following information.
 
 - **id** : a unique identifier for this permission (String)
 - **user_id** : The user for whom the permission applies (String)
-- **permission** : What permission the above user has.  Valid values { _Read, Write_ } (String)
+- **permission** : What permission the above user has.  Valid values { _READ, WRITE_ } (String)
 
 + Parameters
     + id (string) ... unique identifier of this permission
@@ -832,7 +832,7 @@ A Task Permission contains the following information.
             {
                 "id": "1",
                 "user_id": "32",
-                "permission": "Read"
+                "permission": "READ"
             }
 
 #### Retrieve a Single Permission [GET]
@@ -849,12 +849,12 @@ Deletes the task permission identified by _id_.
 ### Task Permission Creation [/rest/v1/permissions/tasks/] 
 #### Create a Single Permission [POST]
 Creates a new task permission for the provided user.  
-Ex.  When signed in as _User1_, giving _Write_ to _User2_ would allow _User2_ to modify _User1s_ tasks. (using the tasks endpoint)
+Ex.  When signed in as _User1_, giving _WRITE_ to _User2_ would allow _User2_ to modify _User1s_ tasks. (using the tasks endpoint)
 + Request (application/json)
 
         {
             "user_id": "42",
-            "permission": "Read"
+            "permission": "READ"
         }
 + Response 201
     [Tasks Permission][]
@@ -875,11 +875,11 @@ Ex.  When signed in as _User1_, giving _Write_ to _User2_ would allow _User2_ to
                 "permissions": [
                     {
                         "user_id": "42",
-                        "permission": "read",
+                        "permission": "READ",
                     },
                     {
                         "user_id": "42",
-                        "permission": "write",
+                        "permission": "WRITE",
                     }
                 ]
             }
@@ -889,7 +889,7 @@ The Search endpoint returns an array of permissions matching the search paramete
 
 + Parameters
     + user_id (optional, String, `42`) ... the user_id of the user for whom you'd like to know what permissions they have.
-    + permission (optional, String, `read`) ... all user-permission pairs will be returned if the requesting user is the owner.
+    + permission (optional, String, `READ`) ... all user-permission pairs will be returned if the requesting user is the owner.
 + Response 200
 
     [Task Permission Collection][]    
@@ -917,7 +917,7 @@ valid permissions are (insert stuff here somehow): Read, Write, etc.
             {
                 "id": "1",
                 "user_id": "32",
-                "permission": "Read"
+                "permission": "READ"
             }
 
 #### Retrieve a Single Permission [GET]
@@ -935,7 +935,7 @@ Describe here.
 
         {
             "user_id": "42",
-            "permission": "Read"
+            "permission": "READ"
         }
 + Response 201
     [Notes Permission][]
@@ -956,11 +956,11 @@ Describe here.
                 "permissions": [
                     {
                         "user_id": "42",
-                        "permission": "read",
+                        "permission": "READ",
                     },
                     {
                         "user_id": "42",
-                        "permission": "write",
+                        "permission": "WRITE",
                     }
                 ]
             }
@@ -970,7 +970,7 @@ The Search endpoint returns an array of permissions matching the search paramete
 
 + Parameters
     + user_id (optional, String, `42`) ... the user_id of the user for whom you'd like to know what permissions they have.
-    + permission (optional, String, `read`) ... all user-permission pairs will be returned if the requesting user is the owner.
+    + permission (optional, String, `READ`) ... all user-permission pairs will be returned if the requesting user is the owner.
 + Response 200
 
     [Note Permission Collection][]    
@@ -998,7 +998,7 @@ valid permissions are (insert stuff here somehow): Read, Write, etc.
             {
                 "id": "1",
                 "user_id": "32",
-                "permission": "Read"
+                "permission": "READ"
             }
 
 #### Retrieve a Single Permission [GET]
@@ -1016,7 +1016,7 @@ Describe here.
 
         {
             "user_id": "42",
-            "permission": "Read"
+            "permission": "READ"
         }
 + Response 201
     [Appointments Permission][]
@@ -1037,11 +1037,11 @@ Describe here.
                 "permissions": [
                     {
                         "user_id": "42",
-                        "permission": "read",
+                        "permission": "READ",
                     },
                     {
                         "user_id": "42",
-                        "permission": "write",
+                        "permission": "WRITE",
                     }
                 ]
             }
@@ -1051,7 +1051,7 @@ The Search endpoint returns an array of permissions matching the search paramete
 
 + Parameters
     + user_id (optional, String, `42`) ... the user_id of the user for whom you'd like to know what permissions they have.
-    + permission (optional, String, `read`) ... all user-permission pairs will be returned if the requesting user is the owner.
+    + permission (optional, String, `READ`) ... all user-permission pairs will be returned if the requesting user is the owner.
 + Response 200
 
     [Appointment Permission Collection][]    
