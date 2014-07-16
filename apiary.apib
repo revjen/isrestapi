@@ -812,7 +812,7 @@ Where a user by default has complete permissions to their own tasks notes an app
 
 ## Resource Tasks Permissions [/tasks]
 
-### Tasks Permission [/rest/v1/permissions/tasks/{id}]
+### permissions/tasks/{id} [/rest/v1/permissions/tasks/{id}]
 
 A Task Permission contains the following information.
 
@@ -840,13 +840,13 @@ Returns a json representation of the task permission object identified by _id_.
 
 + Response 200
 
-    [Tasks Permission][]
+    [permissions/tasks/{id}][]
     
 #### Delete a Permission [DELETE]
 Deletes the task permission identified by _id_.
 + Response 204
 
-### Task Permission Creation [/rest/v1/permissions/tasks/] 
+### permissions/tasks [/rest/v1/permissions/tasks/] 
 #### Create a Single Permission [POST]
 Creates a new task permission for the provided user.  
 Ex.  When signed in as _User1_, giving _WRITE_ to _User2_ would allow _User2_ to modify _User1s_ tasks. (using the tasks endpoint)
@@ -857,9 +857,9 @@ Ex.  When signed in as _User1_, giving _WRITE_ to _User2_ would allow _User2_ to
             "permission": "READ"
         }
 + Response 201
-    [Tasks Permission][]
+    [permissions/tasks/{id}][]
 
-### Task Permission Collection [/rest/v1/permissions/tasks/search{?user_id,permission}]
+### permissions/tasks/search [/rest/v1/permissions/tasks/search{?user_id,permission}]
 
 + Model (application/json)
 
@@ -892,7 +892,7 @@ The Search endpoint returns an array of permissions matching the search paramete
     + permission (optional, String, `READ`) ... all user-permission pairs will be returned if the requesting user is the owner.
 + Response 200
 
-    [Task Permission Collection][]    
+    [permissions/tasks/search][]    
   
   
 ## Resource notes Permissions [/Notes]
