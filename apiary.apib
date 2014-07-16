@@ -895,15 +895,15 @@ The Search endpoint returns an array of permissions matching the search paramete
     [Task Permission Collection][]    
   
   
-## Resource Notes Permissions [/notes]
-### Notes Permission [/rest/v1/permissions/notes/{id}]
-some description of note permissions.
+## Resource notes Permissions [/Notes]
 
-- id
-- user_id
-- permission
+### notes Permission [/rest/v1/permissions/Notes/{id}]
 
-valid permissions are (insert stuff here somehow): Read, Write, etc.
+A note Permission contains the following information.
+
+- **id** : a unique identifier for this permission (String)
+- **user_id** : The user for whom the permission applies (String)
+- **permission** : What permission the above user has.  Valid values { _READ, WRITE_ } (String)
 
 + Parameters
     + id (string) ... unique identifier of this permission
@@ -921,16 +921,20 @@ valid permissions are (insert stuff here somehow): Read, Write, etc.
             }
 
 #### Retrieve a Single Permission [GET]
+Returns a json representation of the note permission object identified by _id_.  
+
 + Response 200
 
-    [Notes Permission][]
+    [notes Permission][]
     
 #### Delete a Permission [DELETE]
+Deletes the note permission identified by _id_.
 + Response 204
 
-### Note Permission Creation [/rest/v1/permissions/notes/] 
+### note Permission Creation [/rest/v1/permissions/Notes/] 
 #### Create a Single Permission [POST]
-Describe here.
+Creates a new note permission for the provided user.  
+Ex.  When signed in as _User1_, giving _WRITE_ to _User2_ would allow _User2_ to modify _User1s_ notes. (using the Notes endpoint)
 + Request (application/json)
 
         {
@@ -938,9 +942,9 @@ Describe here.
             "permission": "READ"
         }
 + Response 201
-    [Notes Permission][]
+    [notes Permission][]
 
-### Note Permission Collection [/rest/v1/permissions/notes/search{?user_id,permission}]
+### note Permission Collection [/rest/v1/permissions/Notes/search{?user_id,permission}]
 
 + Model (application/json)
 
@@ -973,18 +977,18 @@ The Search endpoint returns an array of permissions matching the search paramete
     + permission (optional, String, `READ`) ... all user-permission pairs will be returned if the requesting user is the owner.
 + Response 200
 
-    [Note Permission Collection][]    
-
+    [note Permission Collection][]    
+  
 
 ## Resource Appointments Permissions [/appointments]
+
 ### Appointments Permission [/rest/v1/permissions/appointments/{id}]
-some description of Appointment permissions.
 
-- id
-- user_id
-- permission
+A Appointment Permission contains the following information.
 
-valid permissions are (insert stuff here somehow): Read, Write, etc.
+- **id** : a unique identifier for this permission (String)
+- **user_id** : The user for whom the permission applies (String)
+- **permission** : What permission the above user has.  Valid values { _READ, WRITE_ } (String)
 
 + Parameters
     + id (string) ... unique identifier of this permission
@@ -1002,16 +1006,20 @@ valid permissions are (insert stuff here somehow): Read, Write, etc.
             }
 
 #### Retrieve a Single Permission [GET]
+Returns a json representation of the Appointment permission object identified by _id_.  
+
 + Response 200
 
     [Appointments Permission][]
     
 #### Delete a Permission [DELETE]
+Deletes the Appointment permission identified by _id_.
 + Response 204
 
 ### Appointment Permission Creation [/rest/v1/permissions/appointments/] 
 #### Create a Single Permission [POST]
-Describe here.
+Creates a new Appointment permission for the provided user.  
+Ex.  When signed in as _User1_, giving _WRITE_ to _User2_ would allow _User2_ to modify _User1s_ Appointments. (using the appointments endpoint)
 + Request (application/json)
 
         {
@@ -1055,7 +1063,6 @@ The Search endpoint returns an array of permissions matching the search paramete
 + Response 200
 
     [Appointment Permission Collection][]    
-
-
+  
 
 
