@@ -813,13 +813,14 @@ Where a user by default has complete permissions to their own tasks notes an app
 ## Resource Tasks Permissions [/tasks]
 
 ### Tasks Permission [/rest/v1/permissions/tasks/{id}]
-some description of task permissions.
 
-- id
-- user_id
-- permission
+BRIEFLY DESCRIBE THE ENDPOINTS HERE.
 
-valid permissions are (insert stuff here somehow): Read, Write, etc.
+A Task Permission contains the following information.
+
+- id : a unique identifier for this permission (String)
+- user_id : The user for whom the permission applies (String)
+- permission : What permission the above user has.  Valid values { Read, Write } (String)
 
 + Parameters
     + id (string) ... unique identifier of this permission
