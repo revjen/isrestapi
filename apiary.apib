@@ -801,13 +801,13 @@ To update a Contact send a JSON with updated value for one or more of the Contac
 
 The Permissions endpoints provide the means to add, remove, and query permissions related to their respective endpoint. For example .../permissions/tasks allows a user to get a list of all other users who have read or write access to his tasks, allow another user to read his tasks, or remove a users ability to edit his tasks.  
 
-The permissions endpoint is dividied into three sub-endpoints.  
+The permissions endpoint is divided into three sub-endpoints.  
 
  * tasks  
  * notes  
  * appointments  
  
-Where a user by default has complete permissions to their own tasks notes an appointments.  Calls to GET, DELETE, and POST will apply to the signed in users' resources.(i.e. you cannot change permissions for another user, though you could query for your permissions for their resources)  
+Where a user by default has complete permissions to their own tasks notes an appointments.  Calls to GET, DELETE, and POST will apply to the signed-in users' resources (i.e. you cannot change permissions for another user, though you could query for your permissions for their resources).  
 
 
 ## Resource Tasks Permissions [/tasks]
@@ -835,7 +835,7 @@ A Task Permission contains the following information.
                 "permission": "READ"
             }
 
-#### Retrieve a Single Permission [GET]
+#### Retrieve a Single Permission [GET] 
 Returns a json representation of the task permission object identified by _id_.  
 
 + Response 200
@@ -853,7 +853,7 @@ Ex.  When signed in as _User1_, giving _WRITE_ to _User2_ would allow _User2_ to
 + Request (application/json)
 
         {
-            "user_id": "42",
+            "user_id": "32",
             "permission": "READ"
         }
 + Response 201
@@ -885,7 +885,7 @@ Ex.  When signed in as _User1_, giving _WRITE_ to _User2_ would allow _User2_ to
             }
             
 #### Search for Permissions [GET]
-The Search endpoint returns an array of permissions matching the search parameters you supplied. All parameters are optional. If your make a call to the search endpoint without passing the *user_id* or *permission* paramenters the endpoint will return all permissions for the authenticated user. 
+The Search endpoint returns an array of permissions matching the search parameters you supplied. All parameters are optional. If your make a call to the search endpoint without passing the *user_id* or *permission* parameters the endpoint will return all permissions for the authenticated user. 
 
 + Parameters
     + user_id (optional, String, `42`) ... the user_id of the user for whom you'd like to know what permissions they have.
@@ -938,7 +938,7 @@ Ex.  When signed in as _User1_, giving _WRITE_ to _User2_ would allow _User2_ to
 + Request (application/json)
 
         {
-            "user_id": "42",
+            "user_id": "32",
             "permission": "READ"
         }
 + Response 201
@@ -970,7 +970,7 @@ Ex.  When signed in as _User1_, giving _WRITE_ to _User2_ would allow _User2_ to
             }
             
 #### Search for Permissions [GET]
-The Search endpoint returns an array of permissions matching the search parameters you supplied. All parameters are optional. If your make a call to the search endpoint without passing the *user_id* or *permission* paramenters the endpoint will return all permissions for the authenticated user. 
+The Search endpoint returns an array of permissions matching the search parameters you supplied. All parameters are optional. If your make a call to the search endpoint without passing the *user_id* or *permission* parameters the endpoint will return all permissions for the authenticated user. 
 
 + Parameters
     + user_id (optional, String, `42`) ... the user_id of the user for whom you'd like to know what permissions they have.
@@ -995,7 +995,7 @@ A Appointment Permission contains the following information.
 
 + Model (application/json)
 
-    JSON representation of a Appointment permission Resource.
+    JSON representation of an Appointment permission Resource.
 
     + Body
 
@@ -1023,7 +1023,7 @@ Ex.  When signed in as _User1_, giving _WRITE_ to _User2_ would allow _User2_ to
 + Request (application/json)
 
         {
-            "user_id": "42",
+            "user_id": "32",
             "permission": "READ"
         }
 + Response 201
@@ -1055,7 +1055,7 @@ Ex.  When signed in as _User1_, giving _WRITE_ to _User2_ would allow _User2_ to
             }
             
 #### Search for Permissions [GET]
-The Search endpoint returns an array of permissions matching the search parameters you supplied. All parameters are optional. If your make a call to the search endpoint without passing the *user_id* or *permission* paramenters the endpoint will return all permissions for the authenticated user. 
+The Search endpoint returns an array of permissions matching the search parameters you supplied. All parameters are optional. If your make a call to the search endpoint without passing the *user_id* or *permission* parameters the endpoint will return all permissions for the authenticated user. 
 
 + Parameters
     + user_id (optional, String, `42`) ... the user_id of the user for whom you'd like to know what permissions they have.
