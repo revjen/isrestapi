@@ -161,11 +161,12 @@ To update a task send a JSON with one or more updated values of the task resourc
 
 
 ## Tasks Collection [/rest/v1/tasks/search{?since,until,limit,offset,order,has_due_date}]
-The search endpoint returns 3 additional attributes along with an array of tasks:
+The search endpoint returns 4 additional attributes along with an array of tasks:
 
 - **count** - The number of tasks matching your search parameters.
 - **next** - The URI for the next page of tasks. A null value means there is not a next page. 
 - **previous** - The URI for the previous page of tasks. A null value means there is not a previous page. 
+- **sync_token** - Token returned only on the last page of results. The *sync_token* can be passed to the *sync* endpoint to restrict the result set to only tasks updated, created, and deleted since the result set when the sync_token was returned.
 
 + Model (application/json)
 
@@ -218,7 +219,8 @@ The search endpoint returns 3 additional attributes along with an array of tasks
                 ],
                 "count": 2,
                 "next": null,
-                "previous": null
+                "previous": null,
+                "sync_token": "MFDLJSDUiFiiuds"
             }
             
 ### Search for a Task [GET]
@@ -311,7 +313,7 @@ The sync endpoint returns 4 additional attributes along with an array of task st
             }
             
 ### Sync for Tasks [GET]
-The Sync endpoint returns an array of taskStatuses based on appointments updated, created, or deleted since the result set when the sync_token was returned.
+The Sync endpoint returns an array of taskStatuses based on tasks updated, created, or deleted since the result set when the sync_token was returned.
 
 + Parameters
     + limit (optional, number, `100`) ... Specify the total number of results you would like returned per page. Limit 1,000.
@@ -403,7 +405,7 @@ To update an appointment send a JSON with one or more updated values of the task
 + Response 201
 
 
-## Appointments Collection [/rest/v1/appointments/search{?sync_token,since,until,limit,offset}]
+## Appointments Collection [/rest/v1/appointments/search{?since,until,limit,offset}]
 The search endpoint returns 4 additional attributes along with an array of appointments:
 
 - **count** - The number of appointments matching your search parameters
