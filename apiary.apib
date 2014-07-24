@@ -235,6 +235,7 @@ The Search endpoint returns an array of tasks matching the search parameters you
 
     [Tasks Collection][]    
 
+## Tasks Creation [/rest/v1/tasks] 
 ### Create a Task [POST]
 To create a task simply provide the JSON hash of the task, containing at least the fields *title*, *startDate*, and *endDate*. All other attributes are optional. When you create a new task, the *userId* is automattically set to the *userId* of the authenticated user making the request.
 + Request (application/json)
@@ -247,6 +248,78 @@ To create a task simply provide the JSON hash of the task, containing at least t
 + Response 201 (application/json)
 
     [Task][]
+
+## Tasks Sync Collection [/rest/v1/tasks/sync{?sync_token,limit,offset}]
+The sync endpoint returns 4 additional attributes along with an array of task statuses:
+
+- **count** - The number of task statuses matching your search parameters
+- **next** - The URI for the next page of task statuses. A null value means there is not a next page. 
+- **previous** - The URI for the previous page of task statuses. A null value means there is not a previous page. 
+- **sync_token** - Token returned only on the last page of results. Can be used in subsequent calls to the sync endpoint to restrict the result set to tasks that have been updated, created, and deleted since the result set when the sync_token was returned.
+
++ Model (application/json)
+
+    JSON representation of a Task Status Collection Resource.
+
+    + Headers
+
+            Key: value
+
+    + Body
+
+            {
+                "task_statuses": [
+                    {
+                        "status": "DELETED",
+                        "appointment": {
+                            "id": 586,
+                            "title": "Really Cool task",
+                            "description": "Description of Gist",
+                            "type": "Other",
+                            "priority": 1,
+                            "completed": false,
+                            "contact": null,
+                            "url": "https://api.infusionsoft.com/crm/rest/v1/tasks/586",
+                            "due_date": "2014-08-11T17:00:00.000Z",
+                            "creation_date": "2014-07-07T17:58:34.000Z",
+                            "modification_date": "2014-07-23T21:04:24.000Z",
+                            "completion_date": null                        
+                        }
+                    },
+                    {
+                        "status": "CREATED",
+                        "task": {
+                            "id": 584,
+                            "title": "Super Task",
+                            "description": "Synch up",
+                            "type": "Other",
+                            "priority": 3,
+                            "completed": false,
+                            "contact": null,
+                            "url": "https://api.infusiontest.com/crm/rest/v1/tasks/584",
+                            "due_date": "2014-07-23T12:40:00.000Z",
+                            "creation_date": "2014-07-23T21:02:06.000Z",
+                            "modification_date": "2014-07-23T21:02:06.000Z",
+                            "completion_date": null
+                      }
+                    }
+                ],
+                "count": 2,
+                "next": null,
+                "previous": null,
+                "sync_token": "MFDLJSDUiFiiuds"
+            }
+            
+### Sync for Tasks [GET]
+The Sync endpoint returns an array of taskStatuses based on appointments updated, created, or deleted since the result set when the sync_token was returned.
+
++ Parameters
+    + limit (optional, number, `100`) ... Specify the total number of results you would like returned per page. Limit 1,000.
+    + offset (optional, number, `100`) ... Specify the number of records to offset the results by for paging.
+    + sync_token (required, string, `MFDLJSDUiFiiuds=`) ... Specify the sync_token from the previous search or sync request to see all tasks updated, created, and deleted since the last request. A sync_token may expire, in which case the server will respond with 410 GONE and the client should perform a full synchronization by searching all tasks. Can only be used in conjuction with limit and offset parameters.
++ Response 200
+
+    [Tasks Sync Collection][]   
 
 
 
@@ -284,7 +357,7 @@ The attributes *id*, *date_created*, *modification_date* and *last_updated* are 
 
             {
                 "id": "42",
-                "title": "Really Cool Task",
+                "title": "Really Cool Appointment",
                 "description": "Description of Gist",
                 "creation_date": "2014-07-07T17:58:34.000Z",
                 "start_date": "2014-07-10T17:00:00.000Z",
@@ -352,7 +425,7 @@ The search endpoint returns 4 additional attributes along with an array of appoi
                 "appointments": [
                     {
                         "id": "3",
-                        "title": "Really Cool Task",
+                        "title": "Really Cool Appointment",
                         "description": "Description of Gist",
                         "creation_date": "2014-07-07T17:58:34.000Z",
                         "start_date": "2014-07-10T17:00:00.000Z",
@@ -363,7 +436,7 @@ The search endpoint returns 4 additional attributes along with an array of appoi
                     },
                     {
                         "id": "4",
-                        "title": "Another Really Cool Task",
+                        "title": "Another Really Cool Appointment",
                         "description": "Description of something cool",
                         "creation_date": "2014-07-07T17:58:34.000Z",
                         "start_date": "2014-07-10T17:00:00.000Z",
@@ -398,7 +471,7 @@ To create an appointment simply provide the JSON hash of the appointment, contai
 + Request (application/json)
 
         {
-            "title": "A new task title",
+            "title": "A new Appt title",
             "description": "We are doing something fun.",
             "start_date": "2014-07-10T17:00:00.000Z",
             "end_date": "2014-07-10T18:00:00.000Z",
@@ -435,7 +508,7 @@ The sync endpoint returns 4 additional attributes along with an array of appoint
                         "status": "DELETED",
                         "appointment": {
                             "id": "3",
-                            "title": "Really Cool Task",
+                            "title": "Really Cool Appointment",
                             "description": "Description of Gist",
                             "creation_date": "2014-07-07T17:58:34.000Z",
                             "start_date": "2014-07-10T17:00:00.000Z",
@@ -449,7 +522,7 @@ The sync endpoint returns 4 additional attributes along with an array of appoint
                         "status": "CREATED",
                         "appointment": {
                             "id": "4",
-                            "title": "Another Really Cool Task",
+                            "title": "Another Really Cool Appointment",
                             "description": "Description of something cool",
                             "creation_date": "2014-07-07T17:58:34.000Z",
                             "start_date": "2014-07-10T17:00:00.000Z",
