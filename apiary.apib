@@ -224,7 +224,7 @@ The search endpoint returns 4 additional attributes along with an array of tasks
             }
             
 ### Search for a Task [GET]
-The Search endpoint returns an array of tasks matching the search parameters you supplied. All parameters are optional. If your make a call to the search endpoint without passing the *since* or *until* paramenters the endpoint will return all appointments for the authenticated user (past, present and future). 
+The Search endpoint returns an array of tasks matching the search parameters you supplied. All parameters are optional. If your make a call to the search endpoint without passing the *since* or *until* paramenters the endpoint will return all tasks for the authenticated user (past, present and future). 
 
 + Parameters
     + since (optional, dateTime, `2014-06-01T17:00:00.000Z`) ... Lower bound limit for the task expressed as a timestamp in ISO 8601 format: `YYYY-MM-DDTHH:MM:SSZ`.
@@ -273,7 +273,7 @@ The sync endpoint returns 4 additional attributes along with an array of task st
                 "task_statuses": [
                     {
                         "status": "DELETED",
-                        "appointment": {
+                        "task": {
                             "id": 586,
                             "title": "Really Cool task",
                             "description": "Description of Gist",
