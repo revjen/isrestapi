@@ -343,9 +343,15 @@ The Appointment resource has the following attributes:
 - end_date
 - remind_time
 - location
+- url
+- recurrence[]
+- recurring_event_id
 
 The attributes *id*, *date_created*, *modification_date* and *last_updated* are assigned by the Infusionsoft API at the moment the appointment record is created. 
 
+Where the *series_id* will be shared by all recurring appointments in a series and will otherwise be null.
+
+*recurrence* is a list of RRULE, EXRULE, RDATE, EXDATE lines.(as defined in the [iCalendar spec](https://www.ietf.org/rfc/rfc2445.txt) )
 
 + Parameters
     + id (string) ... ID of the Appointment.
@@ -358,15 +364,21 @@ The attributes *id*, *date_created*, *modification_date* and *last_updated* are 
     + Body
 
             {
-                "id": "42",
+                "id": 42,
                 "title": "Really Cool Appointment",
                 "description": "Description of Gist",
                 "creation_date": "2014-07-07T17:58:34.000Z",
+                "modification_date": "2014-07-07T17:58:34.000Z",
                 "start_date": "2014-07-10T17:00:00.000Z",
                 "end_date": "2014-07-10T18:00:00.000Z",
-                "remind_time": "15",
+                "remind_time": 15,
                 "location": "Starbucks",
-                "url": "https://api.infusionsoft.com/crm/rest/v1/appointments/3"
+                "url": "https://api.infusionsoft.com/crm/rest/v1/appointments/3",
+                "recurrence":[
+                    "EXDATE:19960402T010000Z,19960403T010000Z,19960404T010000Z",
+                    "RRULE:FREQ=DAILY;INTERVAL=2"
+                ],
+                "recurring_event_id":42
             }
 
 ### Retrieve a Single Appointment [GET]
