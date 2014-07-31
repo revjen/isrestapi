@@ -422,7 +422,7 @@ When deleting a recurring appointment, all exceptions to the recurrence are also
 
 + Response 201
 
-## Appointments Collection [/rest/v1/appointments/search{?since,until,limit,offset}]
+## Appointments Collection [/rest/v1/appointments/search{?since,until,limit,offset,expand_recurring_appointments}]
 The search endpoint returns 4 additional attributes along with an array of appointments:
 
 - **count** - The number of appointments matching your search parameters
@@ -487,7 +487,7 @@ A recurring appointment is returned if it contains at least one appointment in t
     + until (optional, dateTime, `2014-08-31T17:00:00.000Z`) ... Upper bound limit for the appointment expressed as a timestamp in ISO 8601 format: `YYYY-MM-DDTHH:MM:SSZ`.
     + limit (optional, number, `100`) ... Specify the total number of results you would like returned per page. Limit 1,000.
     + offset (optional, number, `100`) ... Specify the number of records to offset the results by for paging.
-    + expand_recurring_appointments (optional, boolean, false) ... When enabled, individual members of a series of a recurring appointment are returned in place of the recurring appointment.
+    + expand_recurring_appointments (optional, boolean, `false`) ... When enabled, individual members of a series of a recurring appointment are returned in place of the recurring appointment.
 + Response 200
 
     [Appointments Collection][]    
@@ -570,12 +570,11 @@ The sync endpoint returns 4 additional attributes along with an array of appoint
 ### Sync for Appointments [GET]
 The Sync endpoint returns an array of appointmentStatuses based on appointments updated, created, or deleted since the result set when the sync_token was returned.
 
-Recurring appointments as well as any exceptions to the recurrance series that have been created, deleted, or updated since the sync_token will also be returned in the result.
+Any changes to a recurring appointment, including removing and adding exceptions to the recurrance are considered updates.
 + Parameters
     + limit (optional, number, `100`) ... Specify the total number of results you would like returned per page. Limit 1,000.
     + offset (optional, number, `100`) ... Specify the number of records to offset the results by for paging.
     + sync_token (required, string, `MFDLJSDUiFiiuds=`) ... Specify the sync_token from the previous search or sync request to see all appointments updated, created, and deleted since the last request. A sync_token may expire, in which case the server will respond with 410 GONE and the client should perform a full synchronization by searching all appointments. Can only be used in conjuction with limit and offset parameters.
-    + expand_recurring_appointments (optional, boolean, false) ... When enabled, individual members of a series of a recurring appointment are returned in place of the recurring appointment.
 + Response 200
 
     [Appointments Sync Collection][]   
