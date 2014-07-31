@@ -345,7 +345,7 @@ The Appointment resource has the following attributes:
 - location
 - url
 - recurrence[]
-- recurring_event_id
+- recurring_appointment_id
 
 The attributes *id*, *recurrence_id*, *date_created*, *modification_date* and *last_updated* are assigned by the Infusionsoft API at the moment the appointment record is created. 
 
@@ -378,7 +378,7 @@ Where the *series_id* will be shared by all recurring appointments in a series a
                     "EXDATE:19960402T010000Z,19960403T010000Z,19960404T010000Z",
                     "RRULE:FREQ=DAILY;INTERVAL=2"
                 ],
-                "recurring_event_id":42
+                "recurring_appointment_id":42
             }
 
 ### Retrieve a Single Appointment [GET]
@@ -406,6 +406,7 @@ When replacing a recurring appointment, all exceptions from the recurrence are a
 ### Update an Appointment [PATCH]
 To update an appointment send a JSON with one or more updated values of the task resource attributes. All attribute values (states) from the previous version of this task are carried over by default if not included in the hash.
 
+When updating a recurring appointments recurrance field, all previous exceptions to the recurrance are removed.  When updating any other field on a recurring appointment, that change will be reflected in all appointments in the series, including exception appointments.
 + Request (application/json)
 
         {
@@ -455,7 +456,7 @@ The search endpoint returns 4 additional attributes along with an array of appoi
                             "EXDATE:19960402T010000Z,19960403T010000Z,19960404T010000Z",
                             "RRULE:FREQ=DAILY;INTERVAL=2"
                         ],
-                        "recurring_event_id":3
+                        "recurring_appointment_id":3
                     },
                     {
                         "id": "4",
@@ -468,7 +469,7 @@ The search endpoint returns 4 additional attributes along with an array of appoi
                         "location": "Peter Piper Pizza",
                         "url": "https://api.infusionsoft.com/crm/rest/v1/appointments/4"
                         "recurrence":null,
-                        "recurring_event_id":3
+                        "recurring_appointment_id":3
                     }
                 ],
                 "count": 2,
@@ -478,14 +479,15 @@ The search endpoint returns 4 additional attributes along with an array of appoi
             }
             
 ### Search for Appointments [GET]
-The Search endpoint returns an array of appointments matching the search parameters you supplied. All parameters are optional. If your make a call to the search endpoint without passing the *since* or *until* paramenters the endpoint will return all appointments for the authenticated user (past, present and future). 
+The Search endpoint returns an array of appointments and recurring appointments matching the search parameters you supplied. All parameters are optional. If your make a call to the search endpoint without passing the *since* or *until* paramenters the endpoint will return all appointments for the authenticated user (past, present and future). 
 
-Recurring appointments that have a recurrance rrule defined that falls within the search parameters are returned once with a recurrance in the result set.  Any exceptions that fit the search criteria are also returned in the result set.
+A recurring appointment is returned if it contains at least one appointment in the series which falls within the search parameters.  Any exception appointments that fit the search criteria are also returned.
 + Parameters
     + since (optional, dateTime, `2014-06-01T17:00:00.000Z`) ... Lower bound limit for the appointment expressed as a timestamp in ISO 8601 format: `YYYY-MM-DDTHH:MM:SSZ`.
     + until (optional, dateTime, `2014-08-31T17:00:00.000Z`) ... Upper bound limit for the appointment expressed as a timestamp in ISO 8601 format: `YYYY-MM-DDTHH:MM:SSZ`.
     + limit (optional, number, `100`) ... Specify the total number of results you would like returned per page. Limit 1,000.
     + offset (optional, number, `100`) ... Specify the number of records to offset the results by for paging.
+    + expand_recurring_appointments (optional, boolean, false) ... When enabled, individual members of a series of a recurring appointment are returned in place of the recurring appointment.
 + Response 200
 
     [Appointments Collection][]    
@@ -495,7 +497,6 @@ Recurring appointments that have a recurrance rrule defined that falls within th
 ### Create an Appointment[POST]
 To create an appointment simply provide the JSON hash of the appointment, containing at least the fields *title*, *start_date*, and *end_date*. All other attributes are optional. When you create a new task, the *user_id* is automattically set to the *userId* of the authenticated user making the request.
 
-Use the recurrance_exception endpoint to create an to the recurring appointment that can have unique values but can still be updated as part of the entire recurrance series. 
 + Request (application/json)
 
         {
@@ -510,56 +511,6 @@ Use the recurrance_exception endpoint to create an to the recurring appointment 
 + Response 201 (application/json)
 
     [Appointment][]
-
-## Recurring Appointments Exception [/rest/v1/appointments/{id}/recurrance_exception/{exdate}]
-The recurrance_exception endpoint creates an exception appointment to a recurring appointment.  If the exdate is not already on the recurrance on the original appointment, it will be added.
-
-+ Model (application/json)
-
-    JSON representation of an Appointment Exception Collection Resource.
-
-    + Headers
-
-            Key: value
-
-    + Body
-
-            {
-                "id": 42,
-                "title": "Really Cool Appointment",
-                "description": "Description of Gist",
-                "creation_date": "2014-07-07T17:58:34.000Z",
-                "modification_date": "2014-07-07T17:58:34.000Z",
-                "start_date": "2014-07-10T17:00:00.000Z",
-                "end_date": "2014-07-10T18:00:00.000Z",
-                "remind_time": 15,
-                "location": "Starbucks",
-                "url": "https://api.infusionsoft.com/crm/rest/v1/appointments/3",
-                "recurrence":null,
-                "recurring_event_id":42
-            }
-            
-### Recurrance Exception for Appointments [POST]
-The recurrance_exception endpoint creates an exception to the recurring appointment that can have unique values but can still be updated as part of the entire recurrance series.  If the exdate is not part of the recurrance series, a 400 Bad Request status code is returned.
-+ Parameters
-    + id (string) ... ID of the Recurring Appointment.
-    + exdate (string) ... The timestamp of the exception in the recurrance series.
-
-+ Request (application/json)
-
-        {
-                "title": "Really Cool Appointment",
-                "description": "Description of Gist",
-                "start_date": "2014-07-10T17:00:00.000Z",
-                "end_date": "2014-07-10T18:00:00.000Z",
-                "remind_time": 15,
-                "location": "Starbucks"
-        }
-        
-+ Response 200
-
-    [Recurring Appointments Exception][]   
-
 
 ## Appointments Sync Collection [/rest/v1/appointments/sync{?sync_token,limit,offset}]
 The sync endpoint returns 4 additional attributes along with an array of appointment statuses:
@@ -624,6 +575,7 @@ Recurring appointments as well as any exceptions to the recurrance series that h
     + limit (optional, number, `100`) ... Specify the total number of results you would like returned per page. Limit 1,000.
     + offset (optional, number, `100`) ... Specify the number of records to offset the results by for paging.
     + sync_token (required, string, `MFDLJSDUiFiiuds=`) ... Specify the sync_token from the previous search or sync request to see all appointments updated, created, and deleted since the last request. A sync_token may expire, in which case the server will respond with 410 GONE and the client should perform a full synchronization by searching all appointments. Can only be used in conjuction with limit and offset parameters.
+    + expand_recurring_appointments (optional, boolean, false) ... When enabled, individual members of a series of a recurring appointment are returned in place of the recurring appointment.
 + Response 200
 
     [Appointments Sync Collection][]   
