@@ -345,11 +345,11 @@ The Appointment resource has the following attributes:
 - location
 - url
 - recurrence[]
-- recurring_event_id
+- recurring_appointment_id
 
-The attributes *id*, *recurrence_id*, *date_created*, *modification_date* and *last_updated* are assigned by the Infusionsoft API at the moment the appointment record is created. 
+The attributes *id*, *recurring_appointment_id*, *date_created*, *modification_date* and *last_updated* are assigned by the Infusionsoft API at the moment the appointment record is created. 
 
-Where the *series_id* will be shared by all recurring appointments in a series and will otherwise be null.
+Where the *recurring_appointment_id* will be shared by all recurring appointments in a series and will otherwise be null.
 
 *recurrence* is a list of RRULE, EXRULE, RDATE, EXDATE lines.(as defined in the [iCalendar spec](https://www.ietf.org/rfc/rfc2445.txt) )
 
