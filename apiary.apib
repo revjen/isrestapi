@@ -349,9 +349,9 @@ The Appointment resource has the following attributes:
 
 The attributes *id*, *recurrence_id*, *date_created*, *modification_date* and *last_updated* are assigned by the Infusionsoft API at the moment the appointment record is created. 
 
-Where the *series_id* will be shared by all recurring appointments in a series and will otherwise be null.
+The *recurring_appointment_id* will be shared by all instances of a recurring appointment and will otherwise be null.
 
-*recurrence* is a list of RRULE, EXRULE, RDATE, EXDATE lines.(as defined in the [iCalendar spec](https://www.ietf.org/rfc/rfc2445.txt) )
+*recurrence* is a list of RRULE, EXRULE, RDATE, EXDATE strings (as defined in the [iCalendar spec](https://www.ietf.org/rfc/rfc2445.txt) ).
 
 + Parameters
     + id (string) ... ID of the Appointment.
@@ -374,11 +374,8 @@ Where the *series_id* will be shared by all recurring appointments in a series a
                 "remind_time": 15,
                 "location": "Starbucks",
                 "url": "https://api.infusionsoft.com/crm/rest/v1/appointments/3",
-                "recurrence":[
-                    "EXDATE:19960402T010000Z,19960403T010000Z,19960404T010000Z",
-                    "RRULE:FREQ=DAILY;INTERVAL=2"
-                ],
-                "recurring_appointment_id":42
+                "recurrence":null,
+                "recurring_appointment_id":null
             }
 
 ### Retrieve a Single Appointment [GET]
@@ -391,12 +388,14 @@ To retrieve a single appoointment simply submit a request to the appointment end
 ### Replace an Appointment [PUT]
 To replace an existing appointment send a JSON with one or more of an appointment resource attributes. Attribute values (states) from the previous version of this appointment will not be carried over. Any value not specified will be replaced with null.
 
-When replacing a recurring appointment, all exceptions from the recurrence are also replaced.
+When replacing a recurring appointment, all instances of the series are replaced, including exceptions.
 
 + Request (application/json)
 
         {
-            "title": "Replaced title name"
+            "title": "Replaced title name",
+            "start_date": "2014-07-10T17:00:00.000Z",
+            "end_date": "2014-07-10T18:00:00.000Z"
         }
 
 + Response 200
@@ -406,7 +405,7 @@ When replacing a recurring appointment, all exceptions from the recurrence are a
 ### Update an Appointment [PATCH]
 To update an appointment send a JSON with one or more updated values of the task resource attributes. All attribute values (states) from the previous version of this task are carried over by default if not included in the hash.
 
-When updating a recurring appointments recurrance field, all previous exceptions to the recurrance are removed.  When updating any other field on a recurring appointment, that change will be reflected in all appointments in the series, including exception appointments.
+When updating a recurring appointment's recurrance field, all previous exceptions to the recurrance are removed.  When updating any other field on a recurring appointment, that change will be reflected in all appointments in the series, including exception appointments.
 + Request (application/json)
 
         {
@@ -487,7 +486,7 @@ A recurring appointment is returned if it contains at least one appointment in t
     + until (optional, dateTime, `2014-08-31T17:00:00.000Z`) ... Upper bound limit for the appointment expressed as a timestamp in ISO 8601 format: `YYYY-MM-DDTHH:MM:SSZ`.
     + limit (optional, number, `100`) ... Specify the total number of results you would like returned per page. Limit 1,000.
     + offset (optional, number, `100`) ... Specify the number of records to offset the results by for paging.
-    + expand_recurring_appointments (optional, boolean, `false`) ... When enabled, individual members of a series of a recurring appointment are returned in place of the recurring appointment.
+    + expand_recurring_appointments (optional, boolean, `false`) ... When enabled, individual members of a series of a recurring appointment are returned in place of the recurring appointment. As we cannot return an infinite number of appointments, *until* is required when expanding recurring appointments.
 + Response 200
 
     [Appointments Collection][]    
