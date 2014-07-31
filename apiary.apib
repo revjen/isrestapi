@@ -383,12 +383,16 @@ Where the *series_id* will be shared by all recurring appointments in a series a
 
 ### Retrieve a Single Appointment [GET]
 To retrieve a single appoointment simply submit a request to the appointment endpoint with the appointment *id*. 
+
+Note:  To get an 
 + Response 200
 
     [Appointment][]
 
 ### Replace an Appointment [PUT]
 To replace an existing appointment send a JSON with one or more of an appointment resource attributes. Attribute values (states) from the previous version of this appointment will not be carried over. Any value not specified will be replaced with null.
+
+When replacing a recurring appointment, all exceptions from the recurrence are also replaced.
 
 + Request (application/json)
 
@@ -414,8 +418,9 @@ To update an appointment send a JSON with one or more updated values of the task
     [Appointment][]
 
 ### Delete an Appointment [DELETE]
-+ Response 201
+When deleting a recurring appointment, all exceptions to the recurrence are also deleted.
 
++ Response 201
 
 ## Appointments Collection [/rest/v1/appointments/search{?since,until,limit,offset}]
 The search endpoint returns 4 additional attributes along with an array of appointments:
@@ -447,9 +452,14 @@ The search endpoint returns 4 additional attributes along with an array of appoi
                         "remind_time": "15",
                         "location": "Starbucks",
                         "url": "https://api.infusionsoft.com/crm/rest/v1/appointments/3"
+                        "recurrence":[
+                            "EXDATE:19960402T010000Z,19960403T010000Z,19960404T010000Z",
+                            "RRULE:FREQ=DAILY;INTERVAL=2"
+                        ],
+                        "recurring_event_id":3
                     },
                     {
-                        "id": "4",
+                        "id": "3_19960402T010000Z",
                         "title": "Another Really Cool Appointment",
                         "description": "Description of something cool",
                         "creation_date": "2014-07-07T17:58:34.000Z",
@@ -458,6 +468,8 @@ The search endpoint returns 4 additional attributes along with an array of appoi
                         "remind_time": "15",
                         "location": "Peter Piper Pizza",
                         "url": "https://api.infusionsoft.com/crm/rest/v1/appointments/4"
+                        "recurrence":null,
+                        "recurring_event_id":3
                     }
                 ],
                 "count": 2,
@@ -469,6 +481,7 @@ The search endpoint returns 4 additional attributes along with an array of appoi
 ### Search for Appointments [GET]
 The Search endpoint returns an array of appointments matching the search parameters you supplied. All parameters are optional. If your make a call to the search endpoint without passing the *since* or *until* paramenters the endpoint will return all appointments for the authenticated user (past, present and future). 
 
+Recurring appointments that have a recurrance rrule defined that falls within the search parameters are returned once with a recurrance in the result set.  Any exceptions that fit the search criteria are also returned in the result set.
 + Parameters
     + since (optional, dateTime, `2014-06-01T17:00:00.000Z`) ... Lower bound limit for the appointment expressed as a timestamp in ISO 8601 format: `YYYY-MM-DDTHH:MM:SSZ`.
     + until (optional, dateTime, `2014-08-31T17:00:00.000Z`) ... Upper bound limit for the appointment expressed as a timestamp in ISO 8601 format: `YYYY-MM-DDTHH:MM:SSZ`.
@@ -482,6 +495,7 @@ The Search endpoint returns an array of appointments matching the search paramet
 ## Appointments Creation [/rest/v1/appointments] 
 ### Create an Appointment[POST]
 To create an appointment simply provide the JSON hash of the appointment, containing at least the fields *title*, *start_date*, and *end_date*. All other attributes are optional. When you create a new task, the *user_id* is automattically set to the *userId* of the authenticated user making the request.
+
 + Request (application/json)
 
         {
@@ -496,6 +510,55 @@ To create an appointment simply provide the JSON hash of the appointment, contai
 + Response 201 (application/json)
 
     [Appointment][]
+
+## Recurring Appointments Exception [/rest/v1/appointments/{id}/recurrance_exception/{exdate}]
+The recurrance_exception endpoint creates an exception appointment to a recurring appointment.
+
++ Model (application/json)
+
+    JSON representation of an Appointment Exception Collection Resource.
+
+    + Headers
+
+            Key: value
+
+    + Body
+
+            {
+                "id": 42,
+                "title": "Really Cool Appointment",
+                "description": "Description of Gist",
+                "creation_date": "2014-07-07T17:58:34.000Z",
+                "modification_date": "2014-07-07T17:58:34.000Z",
+                "start_date": "2014-07-10T17:00:00.000Z",
+                "end_date": "2014-07-10T18:00:00.000Z",
+                "remind_time": 15,
+                "location": "Starbucks",
+                "url": "https://api.infusionsoft.com/crm/rest/v1/appointments/3",
+                "recurrence":null,
+                "recurring_event_id":42
+            }
+            
+### Recurrance Exception for Appointments [POST]
+The recurrance_exception endpoint creates an exception to the recurring appointment that can have unique values but can still be updated as part of the entire recurrance series.  If the exdate is not part of the recurrance series, a 400 Bad Request status code is returned.
++ Parameters
+    + id (string) ... ID of the Recurring Appointment.
+    + exdate (string) ... The timestamp of the exception in the recurrance series.
+
++ Request (application/json)
+
+        {
+                "title": "Really Cool Appointment",
+                "description": "Description of Gist",
+                "start_date": "2014-07-10T17:00:00.000Z",
+                "end_date": "2014-07-10T18:00:00.000Z",
+                "remind_time": 15,
+                "location": "Starbucks"
+        }
+        
++ Response 200
+
+    [Recurring Appointments Exception][]   
 
 
 ## Appointments Sync Collection [/rest/v1/appointments/sync{?sync_token,limit,offset}]
