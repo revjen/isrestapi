@@ -160,7 +160,7 @@ To update a task send a JSON with one or more updated values of the task resourc
 + Response 201
 
 
-## Tasks Collection [/rest/v1/tasks/search{?since,until,limit,offset,order,has_due_date}]
+## Tasks Collection [/rest/v1/tasks/search{?since,until,limit,offset,order,completed,has_due_date}]
 The search endpoint returns 4 additional attributes along with an array of tasks:
 
 - **count** - The number of tasks matching your search parameters.
@@ -232,6 +232,7 @@ The Search endpoint returns an array of tasks matching the search parameters you
     + limit (optional, number, `100`) ... Specify the total number of results you would like returned per page. Limit 1,000.
     + offset (optional, number, `100`) ... Specify the number of records to offset the results by for paging.
     + order (optional, string, `priority`) ... Specify how the results of the search shall be ordered (in ascending order). Valid types to sort by include the following: type, priority, due_date. Furthermore, the results may be sorted in descending order if you place a dash ('-') before the value (e.g. "&order=-priority").
+    + completed (optional, boolean, `true`) ... When set to true the results will containn only tasks that have been completed.  false will return only tasks that have not been completed.
     + has_due_date (optional, boolean, `true`) ... When set to true the results will contain only tasks with a due_date set.  false will return only tasks without a due_date.
 + Response 200
 
