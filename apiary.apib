@@ -240,12 +240,13 @@ The Search endpoint returns an array of tasks matching the search parameters you
 
 ## Tasks Creation [/rest/v1/tasks] 
 ### Create a Task [POST]
-To create a task simply provide the JSON hash of the task, containing at least the fields *title*, *startDate*, and *endDate*. All other attributes are optional. When you create a new task, the *userId* is automattically set to the *userId* of the authenticated user making the request.
+To create a task simply provide the JSON hash of the task, containing at least the fields *title* and *due_date*. All other attributes are optional. When you create a new task, the *contact.id* is automatically set to the id of the authenticated user making the request.
 + Request (application/json)
 
         {
             "title": "A new task title",
             "description": "We are doing something fun.",
+            "due_date":"2014-06-17T17:12:52.000Z"
         }
 
 + Response 201 (application/json)
