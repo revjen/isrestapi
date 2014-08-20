@@ -76,6 +76,7 @@ The Task resource has the following attributes:
 - modification_date
 - completion_date
 - completed
+- user_id
 
 To save you from having to make an additional API call, we also return the following data about the contact associated with the task:
 
@@ -107,6 +108,7 @@ The attributes *id*, *date_created* and *modification_date* are assigned by the 
                 "modification_date":"2014-06-12T05:00:00.000Z",
                 "completed":false,
                 "completion_date":null,
+                "user_id":1,
                 "contact":{
                     "id":0,
                     "first_name":"John",
@@ -134,6 +136,7 @@ To replace an existing task send a JSON with one or more of the task resource at
             "due_date":"2014-06-17T17:12:52.000Z",
             "completed":false,
             "completion_date":null,
+            "user_id":1,
             "contact":{
                 "id":1
             }
@@ -160,7 +163,7 @@ To update a task send a JSON with one or more updated values of the task resourc
 + Response 201
 
 
-## Tasks Collection [/rest/v1/tasks/search{?since,until,limit,offset,order,completed,has_due_date}]
+## Tasks Collection [/rest/v1/tasks/search{?since,until,limit,offset,order,completed,has_due_date,user_id}]
 The search endpoint returns 4 additional attributes along with an array of tasks:
 
 - **count** - The number of tasks matching your search parameters.
@@ -189,6 +192,7 @@ The search endpoint returns 4 additional attributes along with an array of tasks
                     "modification_date":"2014-06-12T05:00:00.000Z",
                     "completion_date":null,
                     "completed":false,
+                    "user_id": 1,
                     "contact":{
                         "id":0,
                         "first_name":"John",
@@ -208,6 +212,7 @@ The search endpoint returns 4 additional attributes along with an array of tasks
                         "modification_date":"2014-06-12T05:00:00.000Z",
                         "completion_date":null,
                         "completed":false,
+                        "user_id":1,
                         "contact":{
                             "id":0,
                             "first_name":"Ammon",
@@ -234,6 +239,8 @@ The Search endpoint returns an array of tasks matching the search parameters you
     + order (optional, string, `priority`) ... Specify how the results of the search shall be ordered (in ascending order). Valid types to sort by include the following: type, priority, due_date. Furthermore, the results may be sorted in descending order if you place a dash ('-') before the value (e.g. "&order=-priority").
     + completed (optional, boolean, `true`) ... When set to true the results will containn only tasks that have been completed.  false will return only tasks that have not been completed.
     + has_due_date (optional, boolean, `true`) ... When set to true the results will contain only tasks with a due_date set.  false will return only tasks without a due_date.
+    + user_id (optional, number, `45`) ... When aused, the results will be filtered baseddown to the user to are assigned the tasks.
+
 + Response 200
 
     [Tasks Collection][]    
