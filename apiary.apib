@@ -54,7 +54,11 @@ Generate tokens with Runscope's fantastic [Token Generator](https://www.runscope
 
 If you're using the Infusionsoft PHP library, you can start using a version of the [PHP SDK with OAuth](https://github.com/infusionsoft/infusionsoft-php).
 
+## Data Formats
+The body of the http calls and responses are represented in json.
 
+### Dates
+Dates are represented as "extended format combined date and time" as defined by [ISO 8601](http://www.w3.org/TR/NOTE-datetime).  (ex. YYYY-MM-DDThh:mm:ss.sssTZD) See [Joda Time](http://joda-time.sourceforge.net/cal_iso.html) for an in depth description.
 
 # Group Tasks
 With the Task endpoints you can search, create, put, patch and destroy tasks in Infusionsoft. 
