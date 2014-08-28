@@ -1178,5 +1178,103 @@ The Search endpoint returns an array of permissions matching the search paramete
 
     [permissions/appointments/search][]    
   
+# Group Merchant Accounts
 
+The Merchant Account endpoints provide the means to query merchant accounts related to their respective endpoint. 
+
+## Resource Merchant Accounts [/merchant-accounts]
+
+### merchant-accounts/{id} [/rest/v1/merchant_accounts/{id}]
+
+A Merchant Account resource will contain the following attributes:
+
+- **id** : (String) A unique identifier for this Merchant Account 
+- **name** : (String) The name of the Merchant Account 
+- **type** : (String) The Merchant Account type  e.g. DPS, Authorize, Optimal
+- **mode** : (Integer) The mode in which the Merchant Account is currently operating: 0 = test mode, -1 = live mode
+- **is_order_default** : (Boolean) TRUE if this Merchant Account is set as the default for orders via order forms.
+- **is_ecom_default** : (Boolean) TRUE if this Merchant Account is set as the default for orders made through the shopping cart. 
+- **url** : (String) The URL to this resource. 
+
+
++ Parameters
+    + id (string) ... Unique identifier of this merchant account
+
++ Model (application/json)
+
+    JSON representation of a task permission Resource.
+
+    + Body
+
+            {
+                "id": "1",
+                "name: "Authorize.NET account",
+                "type": "Authorize",
+                "mode": 1,
+                "is_default": false,
+                "url": "https://api.infusionsoft.com/crm/rest/v1/merchant_accounts/1"
+            }
+
+#### Retrieve a Single Merchant Account [GET] 
+Returns a json representation of the Merchant Account account object identified by _id_.  
+
++ Request 
+
+        https://api.infusionsoft.com/crm/rest/v1/merchant_accounts/1
+
++ Response 200
+
+    [merchant-accounts/{id}][]
+    
+## merchant-accounts/search [/rest/v1/merchant_accounts/search{?limit,offset}]
+The search endpoint returns 3 additional attributes along with an array of merchant accounts:
+
+- **count** - (Integer) The number of merchant accountsof results matching your search parameters.
+- **next** - (String) The URI for the next page of merchant accounts. A null value means there is not a next page. 
+- **previous** - (String) The URI for the previous page of merchant accounts. A null value means there is not a previous page. 
+
++ Model (application/json)
+
+    JSON representation of an Note Collection Resource.
+
+    + Body
+
+            {
+                "count": 2,
+                "next": null,
+                "previous": null
+                "merchant_acounts": [
+                    {
+                        "id": "1",
+                        "name: "Authorize.NET account",
+                        "type": "Authorize",
+                        "mode": 1,
+                        "is_default": false, 
+                        "url": "https://api.infusionsoft.com/crm/rest/v1/merchant_accounts/1"
+                    },
+                    {
+                        "id": "3",
+                        "name: "My DPS account",
+                        "type": "DPS",
+                        "mode": 0,
+                        "is_default": true, 
+                        "url": "https://api.infusionsoft.com/crm/rest/v1/merchant_accounts/3"
+                    }
+                ]
+            }
+            
+### Search for Merchant Accounts [GET]
+The Search endpoint returns an array of merchant accounts matching the search parameters you supplied. All parameters are optional.  
+
++ Parameters
+    + limit (optional, number, `100`) ... Specify the total number of results you would like returned per page. Limit 1,000.
+    + offset (optional, number, `100`) ... Specify the number of records to offset the results by for paging.
+
++ Request
+    
+         https://api.infusionsoft.com/crm/rest/v1/merchant_accounts/search?limit=10&offset=0
+
++ Response 200
+
+    [merchant-accounts/search][]    
 
