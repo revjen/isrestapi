@@ -1290,14 +1290,16 @@ A Notification resource will contain the following attributes:
 
 | attribute | type | Description |
 | --- | --- | --- |
-| `id` | required | Application client ID |
-| `type` | required | This is the callback URL that Infusionsoft will redirect the users back to after authorization (must be HTTPS) |
-| `response_type` | required | The desired grant type, as per the OAuth 2.0 spec. The only current valid value is response_type=code |
-| `scope` | | The scopes required by your application. The only current valid value is scope=full |
+| `id` | type | notification ID |
+| `type` | type | The type of message |
+| `response_type` | type | The desired grant type, as per the OAuth 2.0 spec. The only current valid value is response_type=code |
+| `cas_id` | type | The scopes required by your application. The only current valid value is scope=full |
+| `app_name` | type | Application client ID |
+| `message` | type | The message content you would like sent to users. Message gets truncated after 50 characters |
 
 
 + Parameters
-    + id (string) ... Unique identifier of this merchant account
+    + id (string) ... Unique identifier of the notification
 
 + Model (application/json)
 
@@ -1311,26 +1313,26 @@ A Notification resource will contain the following attributes:
                 "type": "Authorize",
                 "mode": 1,
                 "is_default": false,
-                "url": "https://api.infusionsoft.com/crm/rest/v1/merchant_accounts/1"
+                "url": "https://api.infusionsoft.com/crm/rest/v1/notifications/1"
             }
 
 #### Retrieve a Single Notification [GET] 
-Returns a json representation of the Merchant Account account object identified by _id_.  
+Returns a json representation of the notification object identified by _id_.  
 
 + Request 
 
-        https://api.infusionsoft.com/crm/rest/v1/merchant_accounts/1
+        https://api.infusionsoft.com/crm/rest/v1/notifications/1
 
 + Response 200
 
-    [merchant_accounts/{id}][]
+    [notifications/{id}][]
     
 ## notifications/search [/rest/v1/notifications/search{?limit,offset}]
 The search endpoint returns 3 additional attributes along with an array of merchant accounts:
 
-- **count** - (Integer) The number of merchant accountsof results matching your search parameters.
-- **next** - (String) The URI for the next page of merchant accounts. A null value means there is not a next page. 
-- **previous** - (String) The URI for the previous page of merchant accounts. A null value means there is not a previous page. 
+- **count** - (Integer) The number of notification results matching your search parameters.
+- **next** - (String) The URI for the next page of notifications. A null value means there is not a next page. 
+- **previous** - (String) The URI for the previous page of notifications. A null value means there is not a previous page. 
 
 + Model (application/json)
 
@@ -1363,7 +1365,7 @@ The search endpoint returns 3 additional attributes along with an array of merch
             }
             
 ### Search for Notifications [GET]
-The Search endpoint returns an array of merchant accounts matching the search parameters you supplied. All parameters are optional.  
+The Search endpoint returns an array of notifications matching the search parameters you supplied. All parameters are optional.  
 
 + Parameters
     + limit (optional, number, `100`) ... Specify the total number of results you would like returned per page. Limit 1,000.
