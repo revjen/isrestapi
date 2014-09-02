@@ -1327,7 +1327,7 @@ Returns a json representation of the notification object identified by _id_.
 
     [notifications/{id}][]
     
-## notifications/search [/rest/v1/notifications/search{?limit,offset}]
+## notifications/search [/rest/v1/notifications/search{?limit,offset,cas_id,type,app_name}]
 The search endpoint returns 3 additional attributes along with an array of merchant accounts:
 
 - **count** - (Integer) The number of notification results matching your search parameters.
@@ -1370,12 +1370,15 @@ The Search endpoint returns an array of notifications matching the search parame
 + Parameters
     + limit (optional, number, `100`) ... Specify the total number of results you would like returned per page. Limit 1,000.
     + offset (optional, number, `100`) ... Specify the number of records to offset the results by for paging.
+    + cas_id (optional, string, `434fefe`) ... Specifiy the unique cas_id you want to retrieve notifications for.
+    + type (optional, string, `system`) ... The type of notification you want to return.
+    + app_name (optional, string, `a33f8`) ... The name of the Infusionsoft app you want notifications for. All users notifications will be returned.
 
 + Request
     
-         https://api.infusionsoft.com/crm/rest/v1/merchant_accounts/search?limit=10&offset=0
+         https://api.infusionsoft.com/crm/rest/v1/notifications/search?limit=10&offset=0
 
 + Response 200
 
-    [merchant_accounts/search][] 
+    [notifications/search][] 
 
