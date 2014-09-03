@@ -1292,10 +1292,11 @@ A Notification resource will contain the following attributes:
 | --- | --- | --- |
 | `id` | type | notification ID |
 | `type` | type | The type of message |
-| `response_type` | type | The desired grant type, as per the OAuth 2.0 spec. The only current valid value is response_type=code |
+| `email_sent` | boolean | Whether or not an email was sent to the user |
 | `cas_id` | type | The scopes required by your application. The only current valid value is scope=full |
 | `app_name` | type | Application client ID |
 | `message` | type | The message content you would like sent to users. Message gets truncated after 50 characters |
+| `scope` | type | Scope of who the message should be sent to. Options include: global (all Infusionsoft users), all_users (all users of the app), _id_ (specific user(s)) |
 
 
 + Parameters
