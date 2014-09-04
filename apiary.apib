@@ -1393,3 +1393,51 @@ The Search endpoint returns an array of notifications matching the search parame
 
     [notifications/search][] 
 
+## notifications/{id} [/rest/v1/notifications/{id}]
+
++ Model (application/json)
+
+    JSON representation of an Notification Collection Resource.
+
+    + Body
+
+            {
+                "count": 2,
+                "next": null,
+                "previous": null
+                "notifications": [
+                    {
+                        "id": "123e4567-e89b-12d3-a456-426655440000",
+                        "cas_global_id": "32",
+                        "infusionsoft_app_id": "a123",
+                        "type": "TICKET",
+                        "message": "Bug 123 has been resolved",
+                        "link": "support_tickets.infusionsoft.com/123",
+                        "is_read": false,
+                        "creation_date": "2014-06-01T17:00:00.000Z"
+                    }
+                    {
+                        "id": "523e4567-e89b-12d3-a456-426655440104",
+                        "cas_global_id": "32",
+                        "infusionsoft_app_id": "a123",
+                        "type": "SYSTEM",
+                        "message": "Your app have been updated with the new version",
+                        "link": null,
+                        "is_read": true,
+                        "creation_date": "2014-06-01T17:00:00.000Z"
+                    }
+                ]
+            }
+
+### Update a Notification [PATCH]
+To update a notification send a JSON with one or more updated values of the notification resource attributes. All attribute values (states) from the previous version of this notification are carried over by default if not included in the hash.
+
++ Request (application/json)
+
+        {
+            "is_read": false
+        }
+
++ Response 200
+
+    [notifications][]
