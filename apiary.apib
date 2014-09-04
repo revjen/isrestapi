@@ -1291,12 +1291,11 @@ A Notification resource will contain the following attributes:
 | attribute | type | Description |
 | --- | --- | --- |
 | `id` | string | A unique identifier for the notification |
-| `type` | type | The type of message |
-| `cas_global_id` | string | The scopes required by your application. The only current valid value is scope=full |
+| `type` | string | The type of message |
+| `cas_global_id` | long | The cas id of the user |
 | `infusionsoft_app_id` | string | Application client ID |
 | `message` | string | The message content you would like sent to users. Message will be truncated after XX characters in desktop |
-| `link` | string | The url that this notification should link to.
-| `is_read` | boolean | True to represent that the notification has already been read by the user. Will default to false.
+| `read_date` | date | The date that the notification was read.
 | `creation_date` | date | The date that the notification was created.
 
 + Model (application/json)
@@ -1311,8 +1310,7 @@ A Notification resource will contain the following attributes:
                 "infusionsoft_app_id": "a123",
                 "type": "TICKET",
                 "message": "Bug 123 has been resolved",
-                "link": "support_tickets.infusionsoft.com/123",
-                "is_read": false,
+                "read_date": "2014-06-01T17:00:00.000Z",
                 "creation_date": "2014-06-01T17:00:00.000Z"
             }
 
@@ -1325,9 +1323,7 @@ Creates a new notification for the provided cas_global_id.
             "cas_global_id": "32",
             "infusionsoft_app_id": "a123",
             "type": "TICKET",
-            "message": "Bug 123 has been resolved",
-            "link": "support_tickets.infusionsoft.com/123",
-            "is_read": TODO,
+            "message": "Bug 123 has been resolved"
         }
 + Response 201
     [notifications][]
@@ -1356,9 +1352,8 @@ The search endpoint returns 3 additional attributes along with an array of merch
                         "cas_global_id": "32",
                         "infusionsoft_app_id": "a123",
                         "type": "TICKET",
-                        "message": "Bug 123 has been resolved",
-                        "link": "support_tickets.infusionsoft.com/123",
-                        "is_read": false,
+                        "message": "Bug 123 has been resolved"
+                        "read_date": null,
                         "creation_date": "2014-06-01T17:00:00.000Z"
                     }
                     {
@@ -1367,8 +1362,7 @@ The search endpoint returns 3 additional attributes along with an array of merch
                         "infusionsoft_app_id": "a123",
                         "type": "SYSTEM",
                         "message": "Your app have been updated with the new version",
-                        "link": null,
-                        "is_read": true,
+                        "read_date": "2014-06-01T17:00:00.000Z",
                         "creation_date": "2014-06-01T17:00:00.000Z"
                     }
                 ]
@@ -1393,50 +1387,13 @@ The Search endpoint returns an array of notifications matching the search parame
 
     [notifications/search][] 
 
-## notifications/{id} [/rest/v1/notifications/{id}]
+## notifications/{id}/mark_as_read [/rest/v1/notifications/{id}/mark_as_read]
 
-+ Model (application/json)
-
-    JSON representation of an Notification Collection Resource.
-
-    + Body
-
-            {
-                "count": 2,
-                "next": null,
-                "previous": null
-                "notifications": [
-                    {
-                        "id": "123e4567-e89b-12d3-a456-426655440000",
-                        "cas_global_id": "32",
-                        "infusionsoft_app_id": "a123",
-                        "type": "TICKET",
-                        "message": "Bug 123 has been resolved",
-                        "link": "support_tickets.infusionsoft.com/123",
-                        "is_read": false,
-                        "creation_date": "2014-06-01T17:00:00.000Z"
-                    }
-                    {
-                        "id": "523e4567-e89b-12d3-a456-426655440104",
-                        "cas_global_id": "32",
-                        "infusionsoft_app_id": "a123",
-                        "type": "SYSTEM",
-                        "message": "Your app have been updated with the new version",
-                        "link": null,
-                        "is_read": true,
-                        "creation_date": "2014-06-01T17:00:00.000Z"
-                    }
-                ]
-            }
-
-### Update a Notification [PATCH]
-To update a notification send a JSON with one or more updated values of the notification resource attributes. All attribute values (states) from the previous version of this notification are carried over by default if not included in the hash.
+### Mark a Notification as read [POST]
+Marks a Notification as read.
 
 + Request (application/json)
 
-        {
-            "is_read": false
-        }
 
 + Response 200
 
