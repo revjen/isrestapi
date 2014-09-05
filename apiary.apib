@@ -1374,9 +1374,9 @@ The Search endpoint returns an array of notifications matching the search parame
 + Parameters
     + limit (optional, number, `100`) ... Specify the total number of results you would like returned per page. Limit 1,000.
     + offset (optional, number, `100`) ... Specify the number of records to offset the results by for paging.
-    + cas_global_id (optional, string, `434fefe`) ... Specifiy the unique cas_id you want to retrieve notifications for.
+    + cas_global_id (required, string, `434fefe`) ... Specifiy the unique cas_id you want to retrieve notifications for.
     + type (optional, string, `SYSTEM`) ... The type of notification you want to return.
-    + infusionsoft_app_id (optional, string, `a33f8`) ... The name of the Infusionsoft app you want notifications for. All users notifications will be returned.
+    + infusionsoft_app_id (required, string, `a33f8`) ... The name of the Infusionsoft app you want notifications for. All users notifications will be returned.
     + is_read (optional, boolean, `false`) ... When set to true the results will contain only notifications that have been read. false will return only notifications that have not been read.
 
 + Request
