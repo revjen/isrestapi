@@ -1296,7 +1296,7 @@ A Notification resource will contain the following attributes:
 | `infusionsoft_app_id` | string | Application client ID |
 | `message` | string | The message content you would like sent to users. Message will be truncated after XX characters in desktop |
 | `read_date` | date | The date that the notification was read.
-| `creation_date` | date | The date that the notification was created.
+| `date` | date | The date that the notification was created.
 
 + Model (application/json)
 
@@ -1311,7 +1311,7 @@ A Notification resource will contain the following attributes:
                 "type": "TICKET",
                 "message": "Bug 123 has been resolved",
                 "read_date": "2014-06-01T17:00:00.000Z",
-                "creation_date": "2014-06-01T17:00:00.000Z"
+                "date": "2014-06-01T17:00:00.000Z"
             }
 
 #### Create a Single Notification [POST] 
@@ -1365,7 +1365,7 @@ The notifications endpoint returns 3 additional attributes along with an array o
                         "type": "TICKET",
                         "message": "Bug 123 has been resolved"
                         "read_date": null,
-                        "creation_date": "2014-06-01T17:00:00.000Z"
+                        "date": "2014-06-01T17:00:00.000Z"
                     }
                     {
                         "id": "523e4567-e89b-12d3-a456-426655440104",
@@ -1374,7 +1374,7 @@ The notifications endpoint returns 3 additional attributes along with an array o
                         "type": "SYSTEM",
                         "message": "Your app have been updated with the new version",
                         "read_date": "2014-06-01T17:00:00.000Z",
-                        "creation_date": "2014-06-01T17:00:00.000Z"
+                        "date": "2014-06-01T17:00:00.000Z"
                     }
                 ]
             }
