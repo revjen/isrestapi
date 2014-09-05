@@ -1328,6 +1328,17 @@ Creates a new notification for the provided cas_global_id.
 + Response 201
     [notifications][]
 
+## notifications/{id}/mark_as_read [/rest/v1/notifications/{id}/mark_as_read]
+
+### Mark a Notification as read [POST]
+Marks a Notification as read.
+
++ Request (application/json)
+
++ Response 200
+
+    [notifications][]
+
     
 ## notifications/ [/rest/v1/notifications/search{?limit,offset,cas_global_id,infusionsoft_app_id}]
 The notifications endpoint returns 3 additional attributes along with an array of merchant accounts:
@@ -1386,6 +1397,11 @@ The notifications endpoint returns an array of notifications matching the search
     [notifications/][] 
 
 ## notifications/unread [/rest/v1/notifications/unread{?limit,offset,cas_global_id,infusionsoft_app_id}]
+The notifications endpoint returns 3 additional attributes along with an array of merchant accounts:
+
+- **count** - (Integer) The number of notification results matching your search parameters.
+- **next** - (String) The URI for the next page of notifications. A null value means there is not a next page. 
+- **previous** - (String) The URI for the previous page of notifications. A null value means there is not a previous page. 
 
 ### Get All Unread Notifications [GET]
 The unread endpoint returns an array of unread notifications matching the search parameters you supplied.  
@@ -1403,17 +1419,6 @@ The unread endpoint returns an array of unread notifications matching the search
 + Response 200
 
     [notifications/][]
-
-## notifications/{id}/mark_as_read [/rest/v1/notifications/{id}/mark_as_read]
-
-### Mark a Notification as read [POST]
-Marks a Notification as read.
-
-+ Request (application/json)
-
-+ Response 200
-
-    [notifications][]
     
 ## notifications/types [/rest/v1/notifications/types]
 
