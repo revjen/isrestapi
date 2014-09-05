@@ -1329,8 +1329,8 @@ Creates a new notification for the provided cas_global_id.
     [notifications][]
 
     
-## notifications/search [/rest/v1/notifications/search{?limit,offset,cas_global_id,type,infusionsoft_app_id,is_read}]
-The search endpoint returns 3 additional attributes along with an array of merchant accounts:
+## notifications/ [/rest/v1/notifications/search{?limit,offset,cas_global_id,infusionsoft_app_id}]
+The notifications endpoint returns 3 additional attributes along with an array of merchant accounts:
 
 - **count** - (Integer) The number of notification results matching your search parameters.
 - **next** - (String) The URI for the next page of notifications. A null value means there is not a next page. 
@@ -1368,23 +1368,41 @@ The search endpoint returns 3 additional attributes along with an array of merch
                 ]
             }
             
-### Search for Notifications [GET]
-The Search endpoint returns an array of notifications matching the search parameters you supplied. All parameters are optional.  
+### Get All Notifications [GET]
+The notifications endpoint returns an array of notifications matching the search parameters you supplied.  
 
 + Parameters
     + limit (optional, number, `100`) ... Specify the total number of results you would like returned per page. Limit 1,000.
     + offset (optional, number, `100`) ... Specify the number of records to offset the results by for paging.
     + cas_global_id (required, string, `434fefe`) ... Specifiy the unique cas_id you want to retrieve notifications for.
     + infusionsoft_app_id (required, string, `a33f8`) ... The name of the Infusionsoft app you want notifications for. All users notifications will be returned.
-    + is_read (optional, boolean, `false`) ... When set to true the results will contain only notifications that have been read. false will return only notifications that have not been read.
 
 + Request
     
-         https://api.infusionsoft.com/crm/rest/v1/notifications/search?limit=10&offset=0
+         https://api.infusionsoft.com/crm/rest/v1/notifications?limit=10&offset=0
 
 + Response 200
 
-    [notifications/search][] 
+    [notifications][] 
+
+## notifications/unread [/rest/v1/notifications/unread{?limit,offset,cas_global_id,infusionsoft_app_id}]
+
+### Get All Unread Notifications [GET]
+The unread endpoint returns an array of unread notifications matching the search parameters you supplied.  
+
++ Parameters
+    + limit (optional, number, `100`) ... Specify the total number of results you would like returned per page. Limit 1,000.
+    + offset (optional, number, `100`) ... Specify the number of records to offset the results by for paging.
+    + cas_global_id (required, string, `434fefe`) ... Specifiy the unique cas_id you want to retrieve notifications for.
+    + infusionsoft_app_id (required, string, `a33f8`) ... The name of the Infusionsoft app you want notifications for. All users notifications will be returned.
+
++ Request (application/json)
+    
+        https://api.infusionsoft.com/crm/rest/v1/notifications/unread?limit=10&offset=0
+
++ Response 200
+
+    [notifications][]
 
 ## notifications/{id}/mark_as_read [/rest/v1/notifications/{id}/mark_as_read]
 
@@ -1393,7 +1411,20 @@ Marks a Notification as read.
 
 + Request (application/json)
 
-
 + Response 200
 
     [notifications][]
+    
+## notifications/types [/rest/v1/notifications/types]
+
+### Get All Notification Types [GET]
+Returns all Valid Notification Types
+
++ Request (application/json)
+
++ Response 200
+
+        [
+            {"name": "SYSTEM"},
+            {"name": "TICKET"}
+        ]
