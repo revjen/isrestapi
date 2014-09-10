@@ -1315,29 +1315,38 @@ A Notification resource will contain the following attributes:
             }
 
 #### Create a Single Notification [POST] 
-Creates a new notification for the provided cas_global_id.  
+Creates a new notification for the provided notification targets.  
 
 + Request (application/json)
 
         {
-            "cas_global_id": "32",
-            "infusionsoft_app_id": "a123",
-            "type": "TICKET",
-            "message": "Bug 123 has been resolved"
+            "notification_targets":[
+                {
+                    "cas_global_id":1234,
+                    "infusionsoft_app_id":"4321"
+                },
+                {
+                    "cas_global_id":1235,
+                    "infusionsoft_app_id":"4321"
+                }
+            ],
+            "notification":{
+                "type":"Emergency",
+                "message":"test"
+            }
         }
-+ Response 201
-    [notifications][]
 
-## notifications/{id}/mark_as_read [/rest/v1/notifications/{id}/mark_as_read]
++ Response 201
+
+
+## notifications/mark_as_read [/rest/v1/notifications/mark_as_read{?ids}]
 
 ### Mark a Notification as read [POST]
-Marks a Notification as read.
+Marks all notifications in ids list as read.
 
 + Request (application/json)
 
 + Response 200
-
-    [notifications][]
 
     
 ## notifications/ [/rest/v1/notifications/search{?limit,offset,cas_global_id,infusionsoft_app_id}]
