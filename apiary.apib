@@ -1320,7 +1320,7 @@ For ease of use, A cas_global_id long and infusionsoft_app_id string will be inc
 #### Create Notifications [POST] 
 Creates one or more new notifications for the provided notification targets.
 
-If one (or more) notification is sucessfully created, a 201 HTTP status code will be returned; where the response body contains a list of errors on a per-target basis for failures.
+If one (or more) notification is successfully created, a 201 HTTP status code will be returned; where the response body contains a list of errors on a per-target basis for failures.
 
 + Request (application/json)
 
@@ -1362,8 +1362,14 @@ If one (or more) notification is sucessfully created, a 201 HTTP status code wil
             ]
         }
         
++ Response 400
+
+        {
+            "message":"cannot create notification with read date already set."
+        }
+        
 ### Get All Notifications [GET]
-The notifications endpoint returns an array of notifications for the authenticated cas_global_id and infusionsoft_app_id.  
+The notifications endpoint returns an array of notifications for the authenticated cas_global_id and infusionsoft_app_id.
 
 + Request
     
@@ -1396,6 +1402,12 @@ The notifications endpoint returns an array of notifications for the authenticat
                     "read_date":"2014-09-18T18:40:18.893Z"
                 }
             ]
+        }
+        
++ Response 500
+
+        {
+            "message":"An unrecoverable system exception occurred."
         }
 
 
