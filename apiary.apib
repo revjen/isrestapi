@@ -1287,16 +1287,17 @@ The Notification service provides a mechanism to notify users of important event
 ### notifications [/rest/v1/notifications/]
 
 A Notification resource will contain the following attributes:
+For ease of use, A cas_global_id long and infusionsoft_app_id string will be included under notification_target
 
 | attribute | type | Description |
 | --- | --- | --- |
 | `id` | string | A unique identifier for the notification |
 | `type` | string | The type of message |
-| `cas_global_id` | long | The cas id of the user |
-| `infusionsoft_app_id` | string | Application client ID |
+| `notification_target` | nested resource | The target app and user for the notification |
 | `message` | string | The message content you would like sent to users. Message will be truncated after XX characters in desktop |
 | `read_date` | date | The date that the notification was read.
 | `date` | date | The date that the notification was created.
+
 
 + Model (application/json)
 
@@ -1305,13 +1306,15 @@ A Notification resource will contain the following attributes:
     + Body
 
             {
-                "id": "123e4567-e89b-12d3-a456-426655440000",
-                "cas_global_id": "32",
-                "infusionsoft_app_id": "a123",
-                "type": "TICKET",
-                "message": "Bug 123 has been resolved",
-                "read_date": "2014-06-01T17:00:00.000Z",
-                "date": "2014-06-01T17:00:00.000Z"
+                "type":"Emergency",
+                "message":"test",
+                "notification_target":{
+                    "cas_global_id":21,
+                    "infusionsoft_app_id":"a56"
+                },
+                "date":"2014-09-18T18:40:08.120Z",
+                "id":"36d023c0-3f63-11e4-9db5-07108d192dc8",
+                "read_date":"2014-09-18T18:40:18.893Z"
             }
 
 #### Create Notifications [POST] 
@@ -1358,6 +1361,42 @@ If one (or more) notification is sucessfully created, a 201 HTTP status code wil
                 }
             ]
         }
+        
+### Get All Notifications [GET]
+The notifications endpoint returns an array of notifications for the authenticated cas_global_id and infusionsoft_app_id.  
+
++ Request
+    
+         https://api.infusionsoft.com/crm/rest/v1/notifications
+
++ Response 200
+
+        {
+            "notifications": [
+                {
+                    "type":"Emergency",
+                    "message":"test",
+                    "notification_target":{
+                        "cas_global_id":21,
+                        "infusionsoft_app_id":"a56"
+                    },
+                    "date":"2014-09-18T18:40:08.120Z",
+                    "id":"36d023c0-3f63-11e4-9db5-07108d192dc8",
+                    "read_date":"2014-09-18T18:40:18.893Z"
+                },
+                {
+                    "type":"Emergency",
+                    "message":"test",
+                    "notification_target":{
+                        "cas_global_id":21,
+                        "infusionsoft_app_id":"a56"
+                    },
+                    "date":"2014-09-18T18:40:08.120Z",
+                    "id":"36d023c0-3f63-11e4-9db5-07108d192dc8",
+                    "read_date":"2014-09-18T18:40:18.893Z"
+                }
+            ]
+        }
 
 
 ## notifications/mark_as_read [/rest/v1/notifications/mark_as_read{?ids}]
@@ -1369,74 +1408,12 @@ Marks all notifications in ids list as read.
 
 + Response 200
 
-    
-## notifications/ [/rest/v1/notifications/{?limit,offset,cas_global_id,infusionsoft_app_id}]
+
+## notifications/unread [/rest/v1/notifications/unread]
 The notifications endpoint returns 3 additional attributes along with an array of merchant accounts:
-
-- **count** - (Integer) The number of notification results matching your search parameters.
-- **next** - (String) The URI for the next page of notifications. A null value means there is not a next page. 
-- **previous** - (String) The URI for the previous page of notifications. A null value means there is not a previous page. 
-
-+ Model (application/json)
-
-    JSON representation of an Notification Collection Resource.
-
-    + Body
-
-            {
-                "count": 2,
-                "next": null,
-                "previous": null
-                "notifications": [
-                    {
-                        "id": "123e4567-e89b-12d3-a456-426655440000",
-                        "cas_global_id": "32",
-                        "infusionsoft_app_id": "a123",
-                        "type": "TICKET",
-                        "message": "Bug 123 has been resolved"
-                        "read_date": null,
-                        "date": "2014-06-01T17:00:00.000Z"
-                    }
-                    {
-                        "id": "523e4567-e89b-12d3-a456-426655440104",
-                        "cas_global_id": "32",
-                        "infusionsoft_app_id": "a123",
-                        "type": "SYSTEM",
-                        "message": "Your app have been updated with the new version",
-                        "read_date": "2014-06-01T17:00:00.000Z",
-                        "date": "2014-06-01T17:00:00.000Z"
-                    }
-                ]
-            }
-            
-### Get All Notifications [GET]
-The notifications endpoint returns an array of notifications matching the search parameters you supplied.  
-
-+ Parameters
-    + cas_global_id (required, string, `434fefe`) ... Specifiy the unique cas_id you want to retrieve notifications for.
-    + infusionsoft_app_id (required, string, `a33f8`) ... The name of the Infusionsoft app you want notifications for. All users notifications will be returned.
-
-+ Request
-    
-         https://api.infusionsoft.com/crm/rest/v1/notifications?limit=10&offset=0
-
-+ Response 200
-
-    [notifications/][] 
-
-## notifications/unread [/rest/v1/notifications/unread{?limit,offset,cas_global_id,infusionsoft_app_id}]
-The notifications endpoint returns 3 additional attributes along with an array of merchant accounts:
-
-- **count** - (Integer) The number of notification results matching your search parameters.
-- **next** - (String) The URI for the next page of notifications. A null value means there is not a next page. 
-- **previous** - (String) The URI for the previous page of notifications. A null value means there is not a previous page. 
 
 ### Get All Unread Notifications [GET]
-The unread endpoint returns an array of unread notifications matching the search parameters you supplied.  
-
-+ Parameters
-    + cas_global_id (required, string, `434fefe`) ... Specifiy the unique cas_id you want to retrieve notifications for.
-    + infusionsoft_app_id (required, string, `a33f8`) ... The name of the Infusionsoft app you want notifications for. All users notifications will be returned.
+The notifications unread endpoint returns an array of unread notifications for the authenticated cas_global_id and infusionsoft_app_id. 
 
 + Request (application/json)
     
@@ -1444,7 +1421,7 @@ The unread endpoint returns an array of unread notifications matching the search
 
 + Response 200
 
-    [notifications/][]
+    [notifications][]
     
 ## notifications/types [/rest/v1/notifications/types]
 
