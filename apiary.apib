@@ -1392,8 +1392,6 @@ The notifications endpoint returns 3 additional attributes along with an array o
 The notifications endpoint returns an array of notifications matching the search parameters you supplied.  
 
 + Parameters
-    + limit (optional, number, `100`) ... Specify the total number of results you would like returned per page. Limit 1,000.
-    + offset (optional, number, `100`) ... Specify the number of records to offset the results by for paging.
     + cas_global_id (required, string, `434fefe`) ... Specifiy the unique cas_id you want to retrieve notifications for.
     + infusionsoft_app_id (required, string, `a33f8`) ... The name of the Infusionsoft app you want notifications for. All users notifications will be returned.
 
@@ -1416,14 +1414,12 @@ The notifications endpoint returns 3 additional attributes along with an array o
 The unread endpoint returns an array of unread notifications matching the search parameters you supplied.  
 
 + Parameters
-    + limit (optional, number, `100`) ... Specify the total number of results you would like returned per page. Limit 1,000.
-    + offset (optional, number, `100`) ... Specify the number of records to offset the results by for paging.
     + cas_global_id (required, string, `434fefe`) ... Specifiy the unique cas_id you want to retrieve notifications for.
     + infusionsoft_app_id (required, string, `a33f8`) ... The name of the Infusionsoft app you want notifications for. All users notifications will be returned.
 
 + Request (application/json)
     
-        https://api.infusionsoft.com/crm/rest/v1/notifications/unread?limit=10&offset=0
+        https://api.infusionsoft.com/crm/rest/v1/notifications/unread
 
 + Response 200
 
