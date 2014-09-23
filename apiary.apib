@@ -1378,6 +1378,7 @@ If one (or more) notification is successfully created, a 201 HTTP status code wi
 + Response 201
 
         {
+            "message":"was unable to create one or more of the notifications",
             "errors":[
                 {
                     "message":"An unrecoverable system exception occurred.",
@@ -1399,7 +1400,8 @@ If one (or more) notification is successfully created, a 201 HTTP status code wi
 + Response 400
 
         {
-            "message":"cannot create notification with read date already set."
+            "message":"cannot create notification with read date already set.",
+            "errors":[]
         }
         
 ### Get All Notifications [GET]
