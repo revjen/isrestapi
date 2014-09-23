@@ -605,10 +605,12 @@ The Note resource has the following attributes:
 
 - id
 - subject
-- contents
-- action_type
+- details
+- type
 - creation_date
 - modification_date
+- user_id
+- contact
 
 The attributes *id*, *creation_date* and *modification_date* are assigned by the Infusionsoft API at the moment the note record is created. 
 
@@ -625,11 +627,19 @@ The attributes *id*, *creation_date* and *modification_date* are assigned by the
 
             {
                 "id": "42",
-                "title": "Note to self",
-                "subject": "Description of Gist",
-                "action_type": "Call",
+                "subject": "Note to self",
+                "details": "Call with Mr. Smith went very well.",
+                "type": "Call",
                 "creation_date": "2014-07-07T17:58:34.000Z",
                 "modification_date": "2014-08-07T17:58:34.000Z",
+                "due_date":"2014-06-17T17:12:52.000Z",
+                "user_id": 1,
+                "contact":{
+                        "id":0,
+                        "first_name":"John",
+                        "last_name":"Smith",
+                        "email":"john.smith@someurl.com"
+                    }
                 "url": "https://api.infusionsoft.com/crm/rest/v1/notes/42"
             }
 
@@ -645,7 +655,7 @@ To update an Note send a JSON with updated value for one or more of the Note res
 + Request (application/json)
 
         {
-            "title": "Updated title name"
+            "subject": "Updated title name"
         }
 
 + Response 200
@@ -675,24 +685,40 @@ The search endpoint returns 3 additional attributes along with an array of notes
 
             {
                 "notes": [
-                    {
-                        "id": "42",
-                        "title": "Note to self",
-                        "subject": "Description of Gist",
-                        "action_type": "Call",
-                        "creation_date": "2014-07-07T17:58:34.000Z",
-                        "modification_date": "2014-08-07T17:58:34.000Z",
-                        "url": "https://api.infusionsoft.com/crm/rest/v1/notes/42"
-                    },
-                    {
-                        "id": "43",
-                        "title": "Note to self",
-                        "subject": "Description of Gist",
-                        "action_type": "Call",
-                        "creation_date": "2014-07-07T17:58:34.000Z",
-                        "modification_date": "2014-08-07T17:58:34.000Z",
-                        "url": "https://api.infusionsoft.com/crm/rest/v1/notes/43"
-                    }
+                            {
+                                "id": "42",
+                                "subject": "Note to self",
+                                "details": "Call with Mr. Smith went very well.",
+                                "type": "Call",
+                                "creation_date": "2014-07-07T17:58:34.000Z",
+                                "modification_date": "2014-08-07T17:58:34.000Z",
+                                "due_date":"2014-06-17T17:12:52.000Z",
+                                "user_id": 1,
+                                "contact":{
+                                        "id":0,
+                                        "first_name":"John",
+                                        "last_name":"Smith",
+                                        "email":"john.smith@someurl.com"
+                                    }
+                                "url": "https://api.infusionsoft.com/crm/rest/v1/notes/42"
+                            },
+                            {
+                                "id": "42",
+                                "subject": "Note to self",
+                                "details": "Call with Mr. Smith went very well.",
+                                "type": "Call",
+                                "creation_date": "2014-07-07T17:58:34.000Z",
+                                "modification_date": "2014-08-07T17:58:34.000Z",
+                                "due_date":"2014-06-17T17:12:52.000Z",
+                                "user_id": 1,
+                                "contact":{
+                                        "id":0,
+                                        "first_name":"John",
+                                        "last_name":"Smith",
+                                        "email":"john.smith@someurl.com"
+                                    }
+                                "url": "https://api.infusionsoft.com/crm/rest/v1/notes/42"
+                            }
                 ],
                 "count": 2,
                 "next": null,
@@ -718,11 +744,19 @@ To create an note simply provide the JSON hash of the note *title*, *start_date*
 
         {
             "id": "42",
-            "title": "Note to self",
-            "subject": "Description of Gist",
-            "action_type": "Call",
+            "subject": "Note to self",
+            "details": "Call with Mr. Smith went very well.",
+            "type": "Call",
             "creation_date": "2014-07-07T17:58:34.000Z",
             "modification_date": "2014-08-07T17:58:34.000Z",
+            "due_date":"2014-06-17T17:12:52.000Z",
+            "user_id": 1,
+            "contact":{
+                    "id":0,
+                    "first_name":"John",
+                    "last_name":"Smith",
+                    "email":"john.smith@someurl.com"
+                }
             "url": "https://api.infusionsoft.com/crm/rest/v1/notes/42"
         }
 
