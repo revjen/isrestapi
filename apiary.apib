@@ -262,7 +262,7 @@ To create a task simply provide the JSON hash of the task, containing at least t
 
 + Response 201 (application/json)
 
-    [Task][]
+        [Task]
 
 ## Tasks Sync Collection [/rest/v1/tasks/sync{?sync_token,limit,offset}]
 The sync endpoint returns 4 additional attributes along with an array of task statuses:
@@ -522,7 +522,7 @@ To create an appointment simply provide the JSON hash of the appointment, contai
 
 + Response 201 (application/json)
 
-    [Appointment][]
+        [Appointment]
 
 ## Appointments Sync Collection [/rest/v1/appointments/sync{?sync_token,limit,offset}]
 The sync endpoint returns 4 additional attributes along with an array of appointment statuses:
@@ -762,7 +762,7 @@ To create an note simply provide the JSON hash of the note *title*, *start_date*
 
 + Response 201 (application/json)
 
-    [Note][]
+        [Note]
   
 
 # Group Interactions
@@ -1458,7 +1458,6 @@ Marks all notifications in ids list as read.
 
 
 ## notifications/unread [/rest/v1/notifications/unread]
-The notifications endpoint returns 3 additional attributes along with an array of merchant accounts:
 
 ### Get All Unread Notifications [GET]
 The notifications unread endpoint returns an array of unread notifications for the authenticated cas_global_id and infusionsoft_app_id. 
@@ -1468,8 +1467,33 @@ The notifications unread endpoint returns an array of unread notifications for t
         https://api.infusionsoft.com/crm/rest/v1/notifications/unread
 
 + Response 200
-
-    [notifications][]
+        {
+            "notifications": [
+                {
+                    "type":"Emergency",
+                    "message":"test",
+                    "notification_target":{
+                        "cas_global_id":21,
+                        "infusionsoft_app_id":"a56"
+                    },
+                    "date":"2014-09-18T18:40:08.120Z",
+                    "id":"36d023c0-3f63-11e4-9db5-07108d192dc8",
+                    "read_date":null
+                },
+                {
+                    "type":"Emergency",
+                    "message":"test2",
+                    "notification_target":{
+                        "cas_global_id":21,
+                        "infusionsoft_app_id":"a56"
+                    },
+                    "date":"2014-09-18T18:40:08.120Z",
+                    "id":"36d023c0-3f63-11e4-9db5-07108d192dc9",
+                    "read_date":null
+                }
+            ]
+        }
+        
     
 ## notifications/types [/rest/v1/notifications/types]
 
