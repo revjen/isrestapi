@@ -1450,11 +1450,43 @@ The notifications endpoint returns an array of notifications for the authenticat
 ## notifications/mark_as_read [/rest/v1/notifications/mark_as_read{?ids}]
 
 ### Mark a Notification as read [POST]
-Marks all notifications in ids list as read.
+Sets the read_date for the notifications with the provided ids.
+
+If one (or more) notification is successfully updated, a 200 HTTP status code will be returned; where the response body contains a list of errors on a per-target basis for failures.
 
 + Request (application/json)
 
+        {
+            "ids": [
+                "341ee980-4360-11e4-972b-07108d192dc7",
+                "341ee980-4360-11e4-972b-07108d192dc8",
+                "341ee980-4360-11e4-972b-07108d192dc9"
+            ]
+        }
+
 + Response 200
+
+        {
+            "message":"was unable to create one or more of the notifications",
+            "errors":[
+                {
+                    "message":"An unrecoverable system exception occurred.",
+                    "id":"341ee980-4360-11e4-972b-07108d192dc8"
+                },
+                {
+                    "message":"notification does not exist with this id",
+                    "id":"341ee980-4360-11e4-972b-07108d192dc9"
+                }
+            ]
+        }
+        
++ Response 500
+
+        {
+            "message":"An unrecoverable system exception occurred.",
+            "errors":[]
+        }
+        
 
 
 ## notifications/unread [/rest/v1/notifications/unread]
