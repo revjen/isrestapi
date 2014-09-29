@@ -603,14 +603,16 @@ A single Note object.
 
 The Note resource has the following attributes:
 
-- id
-- subject
-- details
-- type
-- creation_date
-- modification_date
-- user_id
-- contact
+| attribute | type | Description 
+| --- | --- | --- 
+| `id` | string | A unique identifier for the notification 
+| `subject` | string | The subject of the note. 
+| `details` | string | The contents of the note. 
+| `type` | string | The type of message. Valid types are: 'Call', 'Email', 'Fax', 'Appointment', 'Letter', and 'Other' 
+| `creation_date` | date | The date that the note was created. 
+| `modification_date` | date | The date that the note was modified. 
+| `user_id` | number | The user id to whom the note is asssigned. 
+| `contact` | nested resource | The contact the note is created for. 
 
 The attributes *id*, *creation_date* and *modification_date* are assigned by the Infusionsoft API at the moment the note record is created. 
 
@@ -632,14 +634,13 @@ The attributes *id*, *creation_date* and *modification_date* are assigned by the
                 "type": "Call",
                 "creation_date": "2014-07-07T17:58:34.000Z",
                 "modification_date": "2014-08-07T17:58:34.000Z",
-                "due_date":"2014-06-17T17:12:52.000Z",
                 "user_id": 1,
                 "contact":{
-                        "id":0,
-                        "first_name":"John",
-                        "last_name":"Smith",
-                        "email":"john.smith@someurl.com"
-                    }
+                    "id":0,
+                    "first_name":"John",
+                    "last_name":"Smith",
+                    "email":"john.smith@someurl.com"
+                },
                 "url": "https://api.infusionsoft.com/crm/rest/v1/notes/42"
             }
 
@@ -652,6 +653,8 @@ To retrieve a single note simply submit a request to the appointment endpoint wi
 ### Edit an Note [PATCH]
 To update an Note send a JSON with updated value for one or more of the Note resource attributes. All attributes values (states) from the previous version of this Note are carried over by default if not included in the hash.
 
+The attributes *subject*, *details*, *type*, *user_id*, and *contact.id* may be modified. 
+
 + Request (application/json)
 
         {
@@ -660,7 +663,23 @@ To update an Note send a JSON with updated value for one or more of the Note res
 
 + Response 200
 
-    [Note][]
+   
+        {
+            "id": "42",
+            "subject": "Updated title name",
+            "details": "Call with Mr. Smith went very well.",
+            "type": "Call",
+            "creation_date": "2014-07-07T17:58:34.000Z",
+            "modification_date": "2014-08-07T17:58:34.000Z",
+            "user_id": 1,
+            "contact":{
+                "id":0,
+                "first_name":"John",
+                "last_name":"Smith",
+                "email":"john.smith@someurl.com"
+            },
+            "url": "https://api.infusionsoft.com/crm/rest/v1/notes/42"
+        }
 
 ### Delete an Note [DELETE]
 + Response 204
@@ -669,9 +688,11 @@ To update an Note send a JSON with updated value for one or more of the Note res
 ## Notes Collection [/rest/v1/notes/search{?since,until,limit,offset}]
 The search endpoint returns 3 additional attributes along with an array of notes:
 
-- **count** - The number of notes matching your search parameters
-- **next** - The URI for the next page of notes. A null value means there is not a next page. 
-- **previous** - The URI for the previous page of notes. A null value means there is not a previous page. 
+| attribute | type | Description 
+| --- | --- | --- 
+| `count` | number | The number of notes matching your search parameters.
+| `next` | string | The URI for the next page of notes. A null value means there is not a next page.
+| `previous` | string | The URI for the previous page of notes. A null value means there is not a previous page.
 
 + Model (application/json)
 
@@ -687,37 +708,35 @@ The search endpoint returns 3 additional attributes along with an array of notes
                 "notes": [
                             {
                                 "id": "42",
-                                "subject": "Note to self",
-                                "details": "Call with Mr. Smith went very well.",
+                                "subject": "Call John - Beer",
+                                "details": "Tell him to pick up a beer on the way home.",
                                 "type": "Call",
                                 "creation_date": "2014-07-07T17:58:34.000Z",
                                 "modification_date": "2014-08-07T17:58:34.000Z",
-                                "due_date":"2014-06-17T17:12:52.000Z",
                                 "user_id": 1,
                                 "contact":{
-                                        "id":0,
-                                        "first_name":"John",
-                                        "last_name":"Smith",
-                                        "email":"john.smith@someurl.com"
-                                    }
+                                    "id":0,
+                                    "first_name":"John",
+                                    "last_name":"Smith",
+                                    "email":"john.smith@someurl.com"
+                                },
                                 "url": "https://api.infusionsoft.com/crm/rest/v1/notes/42"
                             },
                             {
-                                "id": "42",
-                                "subject": "Note to self",
-                                "details": "Call with Mr. Smith went very well.",
+                                "id": "43",
+                                "subject": "Call John - Food",
+                                "details": "Tell him to also pick up a bag of Funions.",
                                 "type": "Call",
-                                "creation_date": "2014-07-07T17:58:34.000Z",
-                                "modification_date": "2014-08-07T17:58:34.000Z",
-                                "due_date":"2014-06-17T17:12:52.000Z",
+                                "creation_date": "2014-07-07T17:59:34.000Z",
+                                "modification_date": "2014-08-07T17:59:34.000Z",
                                 "user_id": 1,
                                 "contact":{
-                                        "id":0,
-                                        "first_name":"John",
-                                        "last_name":"Smith",
-                                        "email":"john.smith@someurl.com"
-                                    }
-                                "url": "https://api.infusionsoft.com/crm/rest/v1/notes/42"
+                                    "id":0,
+                                    "first_name":"John",
+                                    "last_name":"Smith",
+                                    "email":"john.smith@someurl.com"
+                                },
+                                "url": "https://api.infusionsoft.com/crm/rest/v1/notes/43"
                             }
                 ],
                 "count": 2,
@@ -729,8 +748,8 @@ The search endpoint returns 3 additional attributes along with an array of notes
 The Search endpoint returns an array of notes matching the search parameters you supplied. All parameters are optional. If your make a call to the search endpoint without passing the *since* or *until* paramenters the endpoint will return all notes for the authenticated user (past, present and future). 
 
 + Parameters
-    + since (optional, dateTime, `2014-06-01T17:00:00.000Z`) ... Lower bound limit for the appointment expressed as a timestamp in ISO 8601 format: `YYYY-MM-DDTHH:MM:SSZ`.
-    + until (optional, dateTime, `2014-08-31T17:00:00.000Z`) ... Upper bound limit for the appointment expressed as a timestamp in ISO 8601 format: `YYYY-MM-DDTHH:MM:SSZ`.
+    + since (optional, dateTime, `2014-06-01T17:00:00.000Z`) ... Lower bound limit for the note last updated expressed as a timestamp in ISO 8601 format: `YYYY-MM-DDTHH:MM:SSZ`.
+    + until (optional, dateTime, `2014-08-31T17:00:00.000Z`) ... Upper bound limit for the note last updated expressed as a timestamp in ISO 8601 format: `YYYY-MM-DDTHH:MM:SSZ`.
     + limit (optional, number, `100`) ... Specify the total number of results you would like returned per page. Limit 1,000.
     + offset (optional, number, `100`) ... Specify the number of records to offset the results by for paging.
 + Response 200
@@ -739,30 +758,38 @@ The Search endpoint returns an array of notes matching the search parameters you
 
 ## Notes Creation [/rest/v1/notes] 
 ### Create a note [POST]
-To create an note simply provide the JSON hash of the note *title*, *start_date*, and *end_date*. All other attributes are optional. When you create a new task, the *user_id* is automattically set to the *user_id* of the authenticated user making the request.
+To create an note, simply provide the JSON hash of the note *subject* and *contact.id*. All other attributes are optional. When you create a new note, the *user_id* is automatically set to the *user_id* of the authenticated user making the request.
 + Request (application/json)
 
         {
-            "id": "42",
             "subject": "Note to self",
             "details": "Call with Mr. Smith went very well.",
             "type": "Call",
-            "creation_date": "2014-07-07T17:58:34.000Z",
-            "modification_date": "2014-08-07T17:58:34.000Z",
-            "due_date":"2014-06-17T17:12:52.000Z",
             "user_id": 1,
             "contact":{
-                    "id":0,
-                    "first_name":"John",
-                    "last_name":"Smith",
-                    "email":"john.smith@someurl.com"
-                }
-            "url": "https://api.infusionsoft.com/crm/rest/v1/notes/42"
+                "id":0
+            }
         }
 
 + Response 201 (application/json)
 
-        [Note]
+         {
+            "id": "45",
+            "subject": "Note to self",
+            "details": "Call with Mr. Smith went very well.",
+            "type": "Call",
+            "creation_date": "2014-09-30T17:58:34.000Z",
+            "modification_date": "2014-09-30T17:58:34.000Z",
+            "user_id": 1,
+            "contact":{
+                "id":0,
+                "first_name":"John",
+                "last_name":"Smith",
+                "email":"john.smith@someurl.com"
+            }
+            "url": "https://api.infusionsoft.com/crm/rest/v1/notes/45"
+        }
+
   
 
 # Group Interactions
