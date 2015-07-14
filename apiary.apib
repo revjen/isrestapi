@@ -590,3 +590,580 @@ Any changes to a recurring appointment, including removing and adding exceptions
 + Response 200
 
     [Appointments Sync Collection][]   
+
+# Group Orders
+
+
+## Order [/rest/v1/orders/{id}]
+An order is comprised of the following attributes. To reduce the number of API calls you need to make we also return the following embedded resources:
+* contact
+* order_items
+* products
+
+
+### `order` resource
+| attribute | type | Description 
+| --- | --- | --- 
+| `id` | number | `{ "id": 42 }` <br>  
+| `title` | string | `{ "title":"Email Testing Order (10/9/2013)" }` <br> 
+| `status` | string | `{ "status":"UNPAID" }` <br> 
+| `recurring` | bool | `{ "recurring":false }` <br> 
+| `total` | number | `{ "total":500.0 }` <br> 
+| `contact` | embedded object | See the Contact resource definition below. 
+| `creation_date` | datetime | `{ "creation_date":"2013-10-09T16:15:24.000-07:00" }` <br> 
+| `modification_date` | datetime | `{ "modification_date":"2013-12-12T10:30:48.000-07:00" }` <br> 
+| `lead_affiliate_id` | number | `{ "lead_affiliate_id":0 }` <br> 
+| `sales_affiliate_id` | number | `{ "sales_affiliate_id":0 }` <br> 
+| `total_paid` | number | `{ "total_paid":360.0 }` <br> 
+| `total_due` | datetime | `{ "total_due":500.0 }` <br> 
+| `order_items` | embedded object | See the order_items resource representation below.
+
+### `order_items` resource
+
+| attribute | type | Description 
+| --- | --- | --- 
+| `id` | number | `{ "id":1 }` <br> 
+| `name` | string | `{ "name":"Baby Monkey" }` <br> 
+| `description` | string | `{ "description":"" }` <br> 
+| `type` | string | `{ "type":"Product" }` <br> 
+| `notes` | string | `{ "notes":null }` <br> 
+| `quantity` | number | `{ "quantity":1 }` <br> 
+| `cost` | number | `{ "cost":0.0 }` <br>  
+| `price` | number | `{ "price":100.0 }` <br> 
+| `discount` | number | `{ "discount":null }` <br> 
+
+### `product` resource
+
+| attribute | type | Description 
+| --- | --- | --- 
+| `id` | number | ` { "id":1 }` <br>
+| `name` | string | ` { "name":"Baby Monkey" }` <br>
+| `sku` | string | ` { "sku":"" }` <br>
+| `description` | string | ` { "description":"Batteries not included." }` <br>
+| `shippable` | bool | ` { "shippable":false }` <br>
+| `taxable` | bool | ` { "taxable":false }` <br>
+
++ Parameters
+    + id (string) ... ID of the Order.
+
++ Model (application/json)
+
+    JSON representation of an Order Resource.
+
+
+    + Body
+            
+            {
+                "id": 1288,
+                "title": "Email Testing Order (10/9/2013)",
+                "status": "UNPAID",
+                "recurring": null,
+                "total": 500,
+                "contact": {
+                    "id": 3,
+                    "email": "victor.miller@infusionsoft.com",
+                    "first_name": "Email",
+                    "last_name": "Testing"
+                },
+                "creation_date": "2013-10-09T16:15:24.000-07:00",
+                "modification_date": "2013-12-12T10:30:48.000-07:00",
+                "lead_affiliate_id": 0,
+                "sales_affiliate_id": 0,
+                "total_paid": 360,
+                "total_due": 500,
+                "order_items": [
+                    {
+                        "id": 31,
+                        "name": "Howling Monkey",
+                        "description": "",
+                        "type": "Product",
+                        "notes": null,
+                        "quantity": 1,
+                        "cost": 0,
+                        "price": 100,
+                        "discount": null,
+                        "product": {
+                            "id": 1,
+                            "name": "Howling Monkey",
+                            "sku": "",
+                            "description": "",
+                            "shippable": false,
+                            "taxable": false
+                        }
+                    },
+                    {
+                        "id": 5130,
+                        "name": "Baby Monkey",
+                        "description": "",
+                        "type": "Product",
+                        "notes": "",
+                        "quantity": 1,
+                        "cost": 0,
+                        "price": 100,
+                        "discount": null,
+                        "product": {
+                            "id": 1,
+                            "name": "Baby Monkey",
+                            "sku": "",
+                            "description": "",
+                            "shippable": false,
+                            "taxable": false
+                        }
+                    }
+                ],
+                "url": "https://api.infusionsoft.com/crm/rest/v1/orders/1288"
+            }
+
+### Retrieve a Single Order [GET]
+To retrieve a single order simply submit a request to the order endpoint with the order *id*. 
++ Response 200
+
+    [Order][]
+
+
+## Orders Collection [/rest/v1/orders{?since,until,limit,offset,contact_id,product_id}]
+The search endpoint returns 3 additional attributes along with an array of notes:
+
+- **count** - The number of notes matching your search parameters
+- **next** - The URI for the next page of notes. A null value means there is not a next page. 
+- **previous** - The URI for the previous page of notes. A null value means there is not a previous page. 
+- **sync_token** - Token returned only on the last page of results. The *sync_token* can be passed to the *sync* endpoint to restrict the result set to only tasks updated, created, and deleted since the result set when the sync_token was returned.
+
++ Model (application/json)
+
+    JSON representation of an Order Collection Resource.
+
+
+    + Body
+
+            {
+                "orders": [
+                    {
+                        "id": 1288,
+                        "title": "Email Testing Order (10/9/2013)",
+                        "status": "UNPAID",
+                        "recurring": null,
+                        "total": 500,
+                        "contact": {
+                            "id": 3,
+                            "email": "victor.miller@infusionsoft.com",
+                            "first_name": "Email",
+                            "last_name": "Testing",
+                            "company_name": "IBN",
+                            "job_title": "Chief Go-Go Dancer"
+                        },
+                        "creation_date": "2013-10-09T16:15:24.000-07:00",
+                        "modification_date": "2013-12-12T10:30:48.000-07:00",
+                        "lead_affiliate_id": 0,
+                        "sales_affiliate_id": 0,
+                        "total_paid": 360,
+                        "total_due": 500,
+                        "order_items": [
+                            {
+                                "id": 31,
+                                "name": "Howling Monkey",
+                                "description": "",
+                                "type": "Product",
+                                "notes": null,
+                                "quantity": 1,
+                                "cost": 0,
+                                "price": 100,
+                                "discount": null,
+                                "product": {
+                                    "id": 1,
+                                    "name": "Howling Monkey",
+                                    "sku": "",
+                                    "description": "",
+                                    "shippable": false,
+                                    "taxable": false
+                                }
+                            },
+                            {
+                                "id": 5130,
+                                "name": "Baby Monkey",
+                                "description": "",
+                                "type": "Product",
+                                "notes": "",
+                                "quantity": 1,
+                                "cost": 0,
+                                "price": 100,
+                                "discount": null,
+                                "product": {
+                                    "id": 1,
+                                    "name": "Baby Monkey",
+                                    "sku": "",
+                                    "description": "",
+                                    "shippable": false,
+                                    "taxable": false
+                                }
+                            }
+                        ],
+                        "url": "https://api.infusionsoft.com/crm/rest/v1/orders/1288"
+                    },
+                    {
+                        "id": 1548,
+                        "title": "Email Testing Order (10/9/2013)",
+                        "status": "UNPAID",
+                        "recurring": null,
+                        "total": 500,
+                        "contact": {
+                            "id": 3,
+                            "email": "victor.miller@infusionsoft.com",
+                            "first_name": "Email",
+                            "last_name": "Testing"
+                            "company_name": "IBN",
+                            "job_title": "Chief Go-Go Dancer"
+                        },
+                        "creation_date": "2013-10-09T16:15:24.000-07:00",
+                        "modification_date": "2013-12-12T10:30:48.000-07:00",
+                        "lead_affiliate_id": 0,
+                        "sales_affiliate_id": 0,
+                        "total_paid": 360,
+                        "total_due": 500,
+                        "order_items": [
+                            {
+                                "id": 145,
+                                "name": "Spider Monkey",
+                                "description": "",
+                                "type": "Product",
+                                "notes": null,
+                                "quantity": 1,
+                                "cost": 0,
+                                "price": 100,
+                                "discount": null,
+                                "product": {
+                                    "id": 1,
+                                    "name": "Spider Monkey",
+                                    "sku": "",
+                                    "description": "",
+                                    "shippable": false,
+                                    "taxable": false
+                                }
+                            },
+                            {
+                                "id": 1340,
+                                "name": "Sock Monkey",
+                                "description": "",
+                                "type": "Product",
+                                "notes": "",
+                                "quantity": 1,
+                                "cost": 0,
+                                "price": 100,
+                                "discount": null,
+                                "product": {
+                                    "id": 1,
+                                    "name": "Sock Monkey",
+                                    "sku": "",
+                                    "description": "",
+                                    "shippable": false,
+                                    "taxable": false
+                                }
+                            }
+                        ],
+                        "url": "https://api.infusionsoft.com/crm/rest/v1/orders/1548"
+                    }
+                ],
+                "count": 2,
+                "next": null,
+                "previous": null
+                "sync_token": "MFDLJSDUiFiiuds"
+            }
+            
+### List all Orders [GET]
+The Search endpoint returns an array of orders matching the search parameters you supplied. All parameters are optional. If your make a call to the search endpoint without passing the *since* or *until* paramenters the endpoint will return all orders.
+
++ Parameters
+    + since (optional, dateTime, `2014-06-01T17:00:00.000Z`) ... Lower bound limit for the order expressed as a timestamp in ISO 8601 format: `YYYY-MM-DDTHH:MM:SSZ`.
+    + until (optional, dateTime, `2014-08-31T17:00:00.000Z`) ... Upper bound limit for the order expressed as a timestamp in ISO 8601 format: `YYYY-MM-DDTHH:MM:SSZ`.
+    + limit (optional, number, `100`) ... Specify the total number of results you would like returned per page. Limit 1,000.
+    + offset (optional, number, `100`) ... Specify the number of records to offset the results by for paging.
+    + contact_id (optional, number, `42`) ... Specify the contact_id you would like to retrieve orders for.
+    + product_id (optional, number, `963`) ... Specify the product_id you would like to retrieve orders for.
++ Response 200
+
+    [Orders Collection][] 
+  
+## Order Creation [/rest/v1/orders]
+### Create an Order [POST]
+
++ Response 201 (application/json)
+    [Order][]
+
+## Orders Sync [/rest/v1/orders{?sync_token,limit,offset}]
+Sync provides a simple way to retreive an array of order changes since the last time you performed a sync. To perform a sync simply pass the sync token that was returned in a previous GET request as a URL parameter. 
+
+Example:  I want to get all the orders for a specific user for the past 6 months. First make a GET request to /orders with the 'since' and 'until' parameters set to your preferred date range. Infusionsoft will return the orders matching your query along with a sync token on the last page of your results. Now when you want to get a list of orders that have been added, deleted or modified since the sync token was generated simply make another GET request to /orders and pass the 'sync_token' as a parameter.
+
+- **count** - The number of order statuses matching your search parameters
+- **next** - The URI for the next page of orders statuses. A null value means there is not a next page. 
+- **previous** - The URI for the previous page of order statuses. A null value means there is not a previous page. 
+- **sync_token** - Token returned only on the last page of results. Can be used in subsequent calls to the sync endpoint to restrict the result set to tasks that have been updated, created, and deleted since the result set when the sync_token was returned.
+
++ Model (application/json)
+
+    JSON representation of a Order Status Collection Resource.
+
+
+    + Body
+
+
+### Sync for Orders [GET]
+The Sync endpoint returns an array of orderStatuses based on orders updated, created, or deleted since the result set when the sync_token was returned.
+
++ Parameters
+    + limit (optional, number, `100`) ... Specify the total number of results you would like returned per page. Limit 1,000.
+    + offset (optional, number, `100`) ... Specify the number of records to offset the results by for paging.
+    + sync_token (required, string, `MFDLJSDUiFiiuds=`) ... Specify the sync_token from the previous search or sync request to see all tasks updated, created, and deleted since the last request. A sync_token may expire, in which case the server will respond with 410 GONE and the client should perform a full synchronization by searching all orders. Can only be used in conjuction with limit and offset parameters.
++ Response 200
+
+    [Orders Sync][]  
+
+## orders/pay_order [/rest/v1/orders/pay_order]
+Provides the ability to make a payment against an existing order -- or a new order -- through an existing merchant account, using a credit card (or token) stored in Infusionsoft.
+
+`request` parameters:
+
+| Name | Type | Description | Example | Default |
+| --- | --- | --- | --- | --- |
+| `order_id` | number, optional | The id of the order you wish to make a payment against. If omitted, you must fill the `order_items` parameter for making a payment against a new order. | { "id" : 1 } ||
+| `title` | string, required | A title for the order. |{ "title" : "Super awesome order" }  ||
+| `contact_id` | number, required | The id of the contact associated with the order | { "contact_id" : 92 } ||
+| `merchant_account_id` | number, required | The id of the merchant account which will process the payment | {"merchant_account_id" : 4} ||
+| `total_amount` | decimal, optional | For existing orders, it is the amount of the total order to pay, which must be a value equal to or less than the total amount of the order. Omitting this will imply the full amount will be paid. *Partial amounts are currently not supported*. For non-existing orders, the value specified is assumed to be the total (calculated) cost of the order that will be attempted to be paid. | {"total_amount" : 12.99 } ||
+| `payment_method_type` | string, required | The method of payment. Either `cash` or `credit_card` | {"payment_method_type" : "credit_card" } ||
+| `payment_method_id` | number, optional | If payment_method_type is `credit_card`, it is the Infusionsoft card id stored in the system, or the tokenized card id. | {"payment_method_id" : 937123 } ||
+| `note` | string, optional | A note about the payment. | {"note" : "For services rendered" } ||
+| `bypass_commissions` | boolean, optional | Whether this payment should not count towards affiliate commissions. | {"bypass_commissions" : true } | `false` |
+| `source` | string, optional | The originating device from which the payment is made. (Note: values still undefined)| {"source" : "android_mobile" } | |
+| `order_items` | list, optional | If order_id was not provided, a list of `order_item`. Note: Only Infusionsoft Payments merchants supported | *see order_item resource*||
+
+`order_item` resource
+
+| Name | Type | Description | Example | Default |
+| --- | --- | --- | --- | --- |
+| `type` | string, required | The type. Possible values: "Tax", "Shipping", "Subscription", "Product", "Discount", "Tip", or "Other" | { "type" : "Product" } ||
+| `product_id` | number, optional | The id of the product. Required for "Subscription" and "Product" types. | { "product_id" : 5 } ||
+| `subscription_plan_id` | number, optional | The id of the subscription plan. Required for "Subscription" types.| { "subscription_plan_id" : 10 } ||
+| `price` | decimal, required | The dollar amount per unit of the item. Negative values are possible, and indicate discounts/specials. | { "price" : -1.50 } ||
+| `name` | string, required | The item name. | { "name" : "Flux Capacitor" } ||
+| `quantity` | number, optional | The item quantitiy purchased. | { "quantity" : 10 } | `1` |
+
+ 
+ `response` parameters:
+
+| Name | Type | Description |
+| --- | --- | --- |
+| `success` | boolean | If the payment succeeded.  |
+| `failure_reason` | string | If the payment failed, the reason the payment failed. |
+| `order` | nested resource (order) | Fully qualified order resource (*see order resource*), when the payment succeeded. If the attempt failed, for any reason, it is possible that the order was still generated. In this case, you may be able to re-attempt the payment against the returned order id. |
+
+
+### Make a payment [POST]
+
+
++ Request (application/json)
+
+        {
+            "order_id": 1,
+            "title" : "Order for a Flux Capacitor",
+            "contact_id" : 12,
+            "merchant_account_id" : 99,
+            "total_amount" : 21.99,
+            "payment_method_type" : "credit_card",
+            "payment_method_id" : 77733625,
+            "note" : "",
+            "bypass_commissions" : true,
+            "source" : "",
+            "order_items" : [
+                {
+                    "type" : "Prouduct",
+                    "id" : 1,
+                    "price" : 12.00,
+                    "name" : "Flux Capacitor",
+                    "quantity" : 1
+                },
+                {
+                    "type" : "Tax",
+                    "price" : 0.99,
+                    "name" : "Tax"
+                }
+            ]
+        }
+
++ Response 200
+
+        {
+            "success": true,
+            "failure_reason: ""
+            "order": {
+                (see `order` resource)
+            }
+            
+        }
+  
+
++ Response 200
+
+        {
+            "success": false,
+            "failure_reason: "The charge was declined"
+            "order": {
+                (*see `order` resource*)
+            }
+            
+        }
+  
+# Group Transactions
+With the Transactions endpoints you can search transactions  
+
+## Transaction [/rest/v1/transactions/{id}]
+A single Transaction object. 
+
+The Transaction endpoint will return the following resources and attributes:
+
+| attribute | type | Description 
+| --- | --- | --- 
+| `id` | number | `{ "id":12 }` <br>
+| `test` | bool | `{ "test":false }` <br> 'True' indicates this was a test transaction. 
+| `amount` | double | `{ "amount":100.0 }` <br> The total transaction amount. 
+| `currency` | string |  `{ "currency":"USD" }` <br> Currency of the transaction, USD
+| `gateway` | string |  `{ "gateway":"AUTHORIZE" }` <br> Payment gateway used for the transaction.
+| `type` | string | `{ "type":"CAPTURE" }` <br> The date that the note was created. 
+| `status` | string | `{ "status":"Successful Transaction" }` <br> The date that the note was modified. 
+| `errors` | double | `{ "errors":null }` <br> The user id to whom the note is asssigned. 
+| `contact_id` | int | `{ "id":133 }` <br> The id of the contact associated with this transaction. 
+| `transaction_date` | date | `{ "transaction_date":"2013-10-24T14:03:46.000-07:00" }` <br> The date that the transaction took place expressed in iso-8601 datetime. Ex: `2013-10-24T14:03:46.000-07:00`
+| `gateway_account_name` | string | `{ "gateway_account_name":"Authorize" }` <br> This is the name you gave the payment gateway in Infusionsoft.
+| `order_ids` | string | `{ "order_ids":"6,3" }` <br> A comma delimited list of order ids associated with this transaction. 
+| `collection_method` | string | `{ "collection_method":"CollectionMethod" }` <br> Defines whether this transaction was processed via *credit card, Pay Pal or Manually*
+
+
+
++ Parameters
+    + id (string) ... ID of the Transaction.
+
++ Model (application/json)
+
+    JSON representation of a Transaction Resource.
+
+
+    + Body
+    
+            {
+                "id":22
+                "test":false,
+                "amount":100.0,
+                "currency":"USD",
+                "gateway":"AUTHORIZE",
+                "type":"CAPTURE",
+                "status":"Successful Transaction",
+                "errors":null,
+                "contact_id":9,
+                "transaction_date":"2013-10-24T14:03:46.000-07:00",
+                "gateway_account_name":"Authorize",
+                "order_ids":"6",
+                "collection_method":"Credit Card"
+                "url": "https://api.infusionsoft.com/crm/rest/v1/transactions/42"
+            }
+
+### Retrieve a Single Transaction [GET]
+To retrieve a single transaction simply submit a request to the transaction endpoint with the transaction *id*. 
++ Response 200
+
+    [Transaction][]
+
+
+## Transactions Collection [/rest/v1/transactions/{?since,until,limit,offset,contact_id}]
+The search endpoint returns 3 additional attributes along with an array of transactions:
+
+- **count** - The number of transactions matching your search parameters
+- **next** - The URI for the next page of transactions. A null value means there is not a next page. 
+- **previous** - The URI for the previous page of transactions. A null value means there is not a previous page. 
+
++ Model (application/json)
+
+    JSON representation of an Transaction Collection Resource.
+
+    + Headers
+
+
+    + Body
+
+            {
+                "transactions": [
+                    {
+                        "id": 22,
+                        "test": false,
+                        "amount": 100,
+                        "currency": "USD",
+                        "gateway": "AUTHORIZE",
+                        "type": "CAPTURE",
+                        "status": "Successful Transaction",
+                        "errors": null,
+                        "contact_id": 9,
+                        "transaction_date": "2013-10-24T14:03:46.000-07:00",
+                        "gateway_account_name": "Authorize",
+                        "order_ids": "6",
+                        "collection_method": "Credit Card",
+                        "url": "https://api.infusionsoft.com/crm/rest/v1/transactions/42"
+                    },
+                    {
+                        "id": 98,
+                        "test": false,
+                        "amount": 500,
+                        "currency": "USD",
+                        "gateway": "AUTHORIZE",
+                        "type": "CAPTURE",
+                        "status": "Successful Transaction",
+                        "errors": null,
+                        "contact_id": 33,
+                        "transaction_date": "2013-11-04T14:03:46.000-07:00",
+                        "gateway_account_name": "Authorize",
+                        "order_ids": "54",
+                        "collection_method": "Credit Card",
+                        "url": "https://api.infusionsoft.com/crm/rest/v1/transactions/434"
+                    }
+                ],
+                "count": 2,
+                "next": null,
+                "previous": null
+            }
+            
+### List all  Transactions [GET]
+The Search endpoint returns an array of transactions matching the search parameters you supplied. All parameters are optional. If your make a call to the search endpoint without passing the *since* or *until* paramenters the endpoint will return all transactions.
+
++ Parameters
+    + since (optional, dateTime, `2014-06-01T17:00:00.000Z`) ... Lower bound limit for the order expressed as a timestamp in ISO 8601 format: `YYYY-MM-DDTHH:MM:SSZ`.
+    + until (optional, dateTime, `2014-08-31T17:00:00.000Z`) ... Upper bound limit for the order expressed as a timestamp in ISO 8601 format: `YYYY-MM-DDTHH:MM:SSZ`.
+    + limit (optional, number, `100`) ... Specify the total number of results you would like returned per page. Limit 1,000.
+    + offset (optional, number, `100`) ... Specify the number of records to offset the results by for paging.
+    + contact_id (optional, number, `343`) ... Specify the contact_id you would like to return transactions for. 
++ Response 200
+
+    [Transactions Collection][]  
+
+## Transactions Sync [/rest/v1/transactions{?sync_token,limit,offset}]
+Sync provides a simple way to retreive an array of changes since the last time you performed a sync. To perform a sync simply pass the sync token that was returned in a previous GET request as a URL parameter. 
+
+Example:  I want to get all the transactions for a specific user for the past 6 months. First make a GET request to /transactions with the 'since' and 'until' parameters set to your preferred date range. Infusionsoft will return the transactions matching your query along with a sync token on the last page of your results. Now when you want to get a list of transactions that have been added, deleted or modified since the sync token was generated simply make another GET request to /transactions and pass the 'sync_token' as a parameter.
+
+- **count** - The number of task statuses matching your search parameters
+- **next** - The URI for the next page of transaction statuses. A null value means there is not a next page. 
+- **previous** - The URI for the previous page of transaction statuses. A null value means there is not a previous page. 
+- **sync_token** - Token returned only on the last page of results. Can be used in subsequent calls to the sync endpoint to restrict the result set to tasks that have been updated, created, and deleted since the result set when the sync_token was returned.
+
++ Model (application/json)
+
+### Sync for Transactions [GET]
+The Sync endpoint returns an array of transactionStatuses based on tasks updated, created, or deleted since the result set when the sync_token was returned.
+
++ Parameters
+    + limit (optional, number, `100`) ... Specify the total number of results you would like returned per page. Limit 1,000.
+    + offset (optional, number, `100`) ... Specify the number of records to offset the results by for paging.
+    + sync_token (required, string, `MFDLJSDUiFiiuds=`) ... Specify the sync_token from the previous search or sync request to see all transactions updated, created, and deleted since the last request. A sync_token may expire, in which case the server will respond with 410 GONE and the client should perform a full synchronization by searching all transactions. Can only be used in conjuction with limit and offset parameters.
++ Response 200
+
+    [Transactions Sync][]  
+
+# Group Interactions
+The Interaction Service is an internal only API designed for our Mobile Applications. The Interaction Service is used to sync the *Recent* screens between multiple devices. 
