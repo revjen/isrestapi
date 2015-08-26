@@ -918,35 +918,38 @@ The Sync endpoint returns an array of orderStatuses based on orders updated, cre
 
     [Orders Sync][]  
 
-## orders/pay_order [/rest/v1/orders/pay_order]
-Provides the ability to make a payment against an existing order -- or a new order -- through an existing merchant account, using a credit card (or token) stored in Infusionsoft.
+## pay_order [/rest/v1/orders/pay_order]
+Provides the ability to make a payment against an existing order -- or a new order -- through an existing merchant account, using a credit card (or token) stored in Infusionsoft.<p>
+Only orders paid through Infusionsoft Payments gateway is supported at this time.<p>
+This endpoint will pay the remaining balance of the order -- Partial payments are not supported at this time.<p>
+To pay an existing order, provide a valid value for 'order_id' in the request body. Otherwise, to place and pay a new order omit 'order_id' and provide a list of order_item.
+as a list for 'order_item' int he request body.
 
 `request` parameters:
 
 | Name | Type | Description | Example | Default |
 | --- | --- | --- | --- | --- |
-| `order_id` | number, optional | The id of the order you wish to make a payment against. If omitted, you must fill the `order_items` parameter for making a payment against a new order. | { "id" : 1 } ||
+| `order_id` | number, optional | The id of the order you wish to make a payment against. If omitted, you must fill the `order_items` parameter, which will create and pay a new order. | { "id" : 1 } ||
 | `title` | string, required | A title for the order. |{ "title" : "Super awesome order" }  ||
 | `contact_id` | number, required | The id of the contact associated with the order | { "contact_id" : 92 } ||
-| `merchant_account_id` | number, required | The id of the merchant account which will process the payment | {"merchant_account_id" : 4} ||
-| `total_amount` | decimal, optional | For existing orders, it is the amount of the total order to pay, which must be a value equal to or less than the total amount of the order. Omitting this will imply the full amount will be paid. *Partial amounts are currently not supported*. For non-existing orders, the value specified is assumed to be the total (calculated) cost of the order that will be attempted to be paid. | {"total_amount" : 12.99 } ||
-| `payment_method_type` | string, required | The method of payment. Either `cash` or `credit_card` | {"payment_method_type" : "credit_card" } ||
-| `payment_method_id` | number, optional | If payment_method_type is `credit_card`, it is the Infusionsoft card id stored in the system, or the tokenized card id. | {"payment_method_id" : 937123 } ||
+| `payment_gateway_id` | number, required | The id of the payment gateway account which will process credit card payments | {"payment_gateway_id" : 4} ||
+| `payment_method_type` | string, required | The method of payment. Either `cash` or `credit card` | {"payment_method_type" : "credit card" } ||
+| `payment_method_id` | number, optional | If payment_method_type is `credit card`, you must provide the tokenized card id, otherwise this can be omitted. | {"payment_method_id" : 937123 } ||
 | `note` | string, optional | A note about the payment. | {"note" : "For services rendered" } ||
-| `bypass_commissions` | boolean, optional | Whether this payment should not count towards affiliate commissions. | {"bypass_commissions" : true } | `false` |
-| `source` | string, optional | The originating device from which the payment is made. (Note: values still undefined)| {"source" : "android_mobile" } | |
-| `order_items` | list, optional | If order_id was not provided, a list of `order_item`. Note: Only Infusionsoft Payments merchants supported | *see order_item resource*||
+| `source` | string, optional | The originating device from which the payment is made. Either `Android` or `iOS` are valid values| {"source" : "Android" } | |
+| `order_items` | list, optional | If order_id was not provided, a list of `order_item`.| *see order_item resource*||
 
 `order_item` resource
 
 | Name | Type | Description | Example | Default |
 | --- | --- | --- | --- | --- |
-| `type` | string, required | The type. Possible values: "Tax", "Shipping", "Subscription", "Product", "Discount", "Tip", or "Other" | { "type" : "Product" } ||
+| `type` | string, required | The type. Valid values: "Tax", "Subscription", "Product", "Discount", "Tip", or "Other" | { "type" : "Product" } ||
 | `product_id` | number, optional | The id of the product. Required for "Subscription" and "Product" types. | { "product_id" : 5 } ||
 | `subscription_plan_id` | number, optional | The id of the subscription plan. Required for "Subscription" types.| { "subscription_plan_id" : 10 } ||
-| `price` | decimal, required | The dollar amount per unit of the item. Negative values are possible, and indicate discounts/specials. | { "price" : -1.50 } ||
-| `name` | string, required | The item name. | { "name" : "Flux Capacitor" } ||
-| `quantity` | number, optional | The item quantitiy purchased. | { "quantity" : 10 } | `1` |
+| `price` | decimal, required | The amount per unit of the item. For "Discount", positive value is required to indicate the amount to remove from the total. | { "price" : 1.50 } ||
+| `description` | string, optional | The description of the order item. Applies to "Subscription", "Product", "Discount", and "Other" types, Ignored for all other types. | ("description" : "This is a really cool description."}||
+| `name` | string, required | The item name. Required for "Subscription", "Product", and "Other" types. For "Tax" type, it will ovverride the default label, which is "Sales Tax". Ignored for all other types.| { "name" : "Flux Capacitor" } ||
+| `quantity` | number, optional | The item quantity purchased. | { "quantity" : 10 } | `1` |
 
  
  `response` parameters:
@@ -964,29 +967,52 @@ Provides the ability to make a payment against an existing order -- or a new ord
 + Request (application/json)
 
         {
-            "order_id": 1,
-            "title" : "Order for a Flux Capacitor",
-            "contact_id" : 12,
-            "merchant_account_id" : 99,
-            "total_amount" : 21.99,
-            "payment_method_type" : "credit_card",
-            "payment_method_id" : 77733625,
-            "note" : "",
-            "bypass_commissions" : true,
-            "source" : "",
-            "order_items" : [
+            "title": "Purchase throuh REST",
+            "contact_id": 4,
+            "payment_gateway_id": 235,
+            "payment_method_type": "credit card",
+            "payment_method_id": 1555331931,
+            "note": "Paid via REST API - paid via order items",
+            "source": "iOs",
+            "order_items":[
                 {
-                    "type" : "Prouduct",
-                    "id" : 1,
-                    "price" : 12.00,
-                    "name" : "Flux Capacitor",
-                    "quantity" : 1
+                    "type":"Product",
+                    "product_id": 1,
+                    "price":25.00,
+                    "quantity":2,
+                    "name":"Test Product from REST",
+                    "description":"Color: red text: blah"
                 },
                 {
-                    "type" : "Tax",
-                    "price" : 0.99,
-                    "name" : "Tax"
+                    "type":"Subscription",
+                    "product_id": 2,
+                    "subscription_plan_id": 1,
+                    "price":5.00,
+                    "quantity":1,
+                    "name":"Test subccription from REST",
+                    "description":"blah"
+                },
+                {
+                    "type":"Tax",
+                    "price":2.00,
+                    "name":"Gimme-tax"
+                },
+                {
+                    "type":"Discount",
+                    "description":"10% off order total promo code: SALE",
+                    "price":10.00
+                }, 
+                {
+                    "type":"Tip",
+                    "price":9.00
+                },
+                {
+                    "type":"Other",
+                    "name":"Key Fee",
+                    "Description":"How are you going to drive it?",
+                    "price":19.00
                 }
+
             ]
         }
 
@@ -994,25 +1020,57 @@ Provides the ability to make a payment against an existing order -- or a new ord
 
         {
             "success": true,
-            "failure_reason: ""
+            "failure_reason: "",
             "order": {
-                (see `order` resource)
+                (*see order resource*)
             }
             
         }
-  
+
 
 + Response 200
 
         {
             "success": false,
-            "failure_reason: "The charge was declined"
+            "failure_reason: "The charge was declined",
             "order": {
                 (*see `order` resource*)
             }
             
         }
-  
+        
+## signature [/rest/v1/orders/{order_id}/signature]
+Provides the ability to send a signature file.<p>
+This is typically used when requiring a shopper to provide a signature to accompany a credit card purchase.
+
+`request` parameters:
+
+| Name | Type | Description | Example | Default |
+| --- | --- | --- | --- | --- |
+| `file` | multipart, required | The signature file to send. |||
+
+ 
+
+### Send a signature [POST]
++ Parameters
+    + order_id (string) ... ID of the order.
+
++ Request (multipart/form-data)
+
+        {
+            file: (the file)
+        }
+            
++ Response 200
+
+        {
+            "order": {
+                (*see order resource*)
+            }
+            
+        }
+
+
 # Group Transactions
 With the Transactions endpoints you can search transactions  
 
@@ -1165,5 +1223,372 @@ The Sync endpoint returns an array of transactionStatuses based on tasks updated
 
     [Transactions Sync][]  
 
-# Group Interactions
-The Interaction Service is an internal only API designed for our Mobile Applications. The Interaction Service is used to sync the *Recent* screens between multiple devices. 
+
+  
+# Group Merchant Accounts
+
+The Merchant Account endpoints provide the means to query merchant accounts related to their respective endpoint. 
+
+## Resource Merchant Accounts [/merchant_accounts]
+
+### merchant_accounts/{id} [/rest/v1/merchant_accounts/{id}]
+
+A Merchant Account resource will contain the following attributes:
+
+- **id** : (String) A unique identifier for this Merchant Account 
+- **name** : (String) The name of the Merchant Account 
+- **type** : (String) The Merchant Account type  e.g. DPS, Authorize, Optimal
+- **mode** : (Integer) The mode in which the Merchant Account is currently operating: 0 = test mode, -1 = live mode
+- **is_order_default** : (Boolean) TRUE if this Merchant Account is set as the default for orders via order forms.
+- **is_ecom_default** : (Boolean) TRUE if this Merchant Account is set as the default for orders made through the shopping cart. 
+- **url** : (String) The URL to this resource. 
+
+
++ Parameters
+    + id (string) ... Unique identifier of this merchant account
+
++ Model (application/json)
+
+    JSON representation of a task permission Resource.
+
+    + Body
+
+            {
+                "id": "1",
+                "name: "Authorize.NET account",
+                "type": "Authorize",
+                "mode": 1,
+                "is_default": false,
+                "url": "https://api.infusionsoft.com/crm/rest/v1/merchant_accounts/1"
+            }
+
+#### Retrieve a Single Merchant Account [GET] 
+Returns a json representation of the Merchant Account account object identified by _id_.  
+
++ Request 
+
+        https://api.infusionsoft.com/crm/rest/v1/merchant_accounts/1
+
++ Response 200
+
+    [merchant_accounts/{id}][]
+    
+## merchant_accounts/search [/rest/v1/merchant_accounts/search{?limit,offset}]
+The search endpoint returns 3 additional attributes along with an array of merchant accounts:
+
+- **count** - (Integer) The number of merchant accountsof results matching your search parameters.
+- **next** - (String) The URI for the next page of merchant accounts. A null value means there is not a next page. 
+- **previous** - (String) The URI for the previous page of merchant accounts. A null value means there is not a previous page. 
+
++ Model (application/json)
+
+    JSON representation of an Note Collection Resource.
+
+    + Body
+
+            {
+                "count": 2,
+                "next": null,
+                "previous": null
+                "merchant_acounts": [
+                    {
+                        "id": "1",
+                        "name: "Authorize.NET account",
+                        "type": "Authorize",
+                        "mode": 1,
+                        "is_default": false, 
+                        "url": "https://api.infusionsoft.com/crm/rest/v1/merchant_accounts/1"
+                    },
+                    {
+                        "id": "3",
+                        "name: "My DPS account",
+                        "type": "DPS",
+                        "mode": 0,
+                        "is_default": true, 
+                        "url": "https://api.infusionsoft.com/crm/rest/v1/merchant_accounts/3"
+                    }
+                ]
+            }
+            
+### Search for Merchant Accounts [GET]
+The Search endpoint returns an array of merchant accounts matching the search parameters you supplied. All parameters are optional.  
+
++ Parameters
+    + limit (optional, number, `100`) ... Specify the total number of results you would like returned per page. Limit 1,000.
+    + offset (optional, number, `100`) ... Specify the number of records to offset the results by for paging.
+
++ Request
+    
+         https://api.infusionsoft.com/crm/rest/v1/merchant_accounts/search?limit=10&offset=0
+
++ Response 200
+
+    [merchant_accounts/search][]    
+    
+
+
+
+# Group Products
+With the Products endpoints, you can look up details for a single product or serach a list of products in Infusionsoft. 
+
+## products/ [/rest/v1/products/{id}]
+A single Product object. 
+
+The Product resource:
+
+| Name | Type | Description |
+| --- | --- | --- |
+| `id` | number | Unique identifier for the product. |
+| `product_name` | string | The name of the product. |
+| `product_desc` | string | A description of the product. |
+| `product_short_desc` | string | A short description of the product. |
+| `product_price` | decimal | The price per unit of the product. |
+| `sku` | string | The product sku. |
+| `sub_category_id` | string | The product sku. |
+| `status` | number | Whether the product is active(1) or inactive(0). |
+| `subscription_only` | boolean | If the product should be sold only as a subscription and not a one-time product. |
+| `url` | string | The URL link to the product resource. |
+| `product_options` | nested resource (Option) | Zero to many customizable options the product may have. (e.g color, size, text, etc.) |
+| `subscription_plans` | nested resource (Subscription) | If the product is to be sold as a subscription, the list of subscription plans associated to the product.|
+
+The Option nested resource:
+
+| Name | Type | Description |
+| --- | --- | --- |
+| `id` | number | Unique identifier for the option |
+| `name` | string | The name of the option |
+| `label` | string | The displayable name of the option |
+| `required` | boolean | If this option is required for purchase. |
+| `type` | string | The type of option. Valid values are "Variable" or "FixedList". |
+| `min_chars` | number | For Variable-type option, the minimum number of characters that must be entered.|
+| `max_chars` | number | For Variable-type option, the maximum number of characters that can be entered.|
+| `can_start_with_character` | boolean | For Variable-type option, indicates if the text can begin with a character.|
+| `can_start_with_number` | boolean | For Variable-type option, indicates if the text can begin with a number (0-9).|
+| `can_contain_character` | boolean | For Variable-type option, indicates if the text may contain characters.|
+| `can_contain_number` | boolean | For Variable-type option, indicates if the text may contain numbers (0-9).|
+| `can_end_with_character` | boolean | For Variable-type option, indicates if the text can end with a character.|
+| `can_end_with_number` | boolean | For Variable-type option, indicates if the text can startend with a number (0-9).|
+| `allow_spaces` | boolean | For Variable-type option, indicates if apces are allowed in text. |
+| `text_message` | string | For Variable-type option, the message to display of the user does not follow the specified rules. |
+| `display_index` | number | The display order of this option. Starts at 1. |
+| `values` | nested resource (Values) | For FixedList-type option, the list of option values to choose from. |
+
+The Values nested resource:
+
+| Name | Type | Description |
+| --- | --- | --- |
+| `id` | number | Unique identifier for the option value. |
+| `label` | string | The name of the option value. |
+| `sku` | string | The sku of this option value. |
+| `is_default` | boolean | If this option is selected by default. |
+| `index` | number | The order (1 = highest) this value is displayed in the list of values. |
+| `price_adjustment` | decimal | The amount to adjust from the product price when this value is chosen. Negative values indicate subtraction from the price. |
+
+The Subscription nested resource:
+
+| Name | Type | Description |
+| --- | --- | --- |
+| `id` | number | Unique identifier for the subscription plan. |
+| `subscription_plan_name` | string | The name of the subscription plan. |
+| `cycle` | number | The length of each cycle. (6 = Daily, 3 = Weekly, 2 = Month, 1= Yearly)|
+| `frequency` | number | How many times per cycle the subscription should be charged. |
+| `number_of_cycles` | number | The total number of cycles this plan has before completion. Zero indicates unlimited cycles.|
+| `subscription_plan_index` | number | The order (1 = highest) which this plan is listed for display. |
+| `plan_price` | decimal | The cost for each cycle of a subscription. |
+| `active` | boolean | Whether or not this subscription plan is active. |
+
++ Parameters
+    + id (required, number, `1`) ... The product's unique identifier.
+    
+
++ Model (application/json)
+
+    JSON representation of a Product Resource.
+
+    + Body
+            
+            {
+                "id" : 1,
+                "product_name": "Flux Capacitor",
+                "short_description": "Key component required for time travel.",
+                "product_price": 5999.99,
+                "sku": "FC12GW",
+                "subscription_only": false,
+                "url": "https://api.infusionsoft.com/crm/rest/v1/products/1",
+                "product_options": [ 
+                    {
+                        "id": 5,
+                        "name": "Size",
+                        "label": "Size",
+                        "required": true,
+                        "type": "FixedList",
+                        "values": [ 
+                            {
+                                "id": 10,
+                                "sku": "WK123",
+                                "name": "Small",
+                                "default": true,
+                                "index": 1,
+                                "price_adjustment": -15.99
+                            },
+                            {
+                                "id": 11,
+                                "sku": "WK124",
+                                "name": "Large",
+                                "default": false,
+                                "index": 2,
+                                "price_adjustment": 5.00
+                            }
+                        ]
+                    }, 
+                    {
+                        "id": 15,
+                        "name": "Engraving",
+                        "required": true,
+                        "order": 2,
+                        "type": "Variable",
+                        "min_chars": 1,
+                        "max_chars": 10,
+                        "can_end_with_character": false,
+                        "can_end_with_number": true,
+                        "can_contain_character": true,
+                        "can_contain_number": true,
+                        "can_start_with_character": true,
+                        "can_start_with_number": false,
+                        "allow_spaces": false,
+                        "text_message" : "You did something wrong. Do it again."
+                    }
+                ],
+                "subscription_plans": [ 
+                    {
+                        "id": 15,
+                        "subscription_plan_name": "Monthly rental, for 12 months",
+                        "cycle": 2,
+                        "frequency": 1,
+                        "number_of_cycles": 12,
+                        "plan_price": 999.99,
+                        "active": true,
+                        "subscription_plan_index": 1
+                    }
+                ],
+            ]
+
+### Get single product details [GET]
+This call allows you to look up the details of a single product on Infusionsoft. 
+
++ Response 200
+
+    [products/][]
+
+## products/search [/rest/v1/products/search{?limit,offset,active}]
+Retrieves all products on Infusionsoft based on specific filters. 
+Will return an empty array if no products match your specified search criteria. 
+Results will be paged, if there are more than the provided limit.
+
+The Product Search resource:
+
+| Name | Type | Description |
+| --- | --- | --- |
+| `count` | number | The total count of the results of the search. |
+| `next` | string | A URL to the next page of results, or NULL if it does not exist. |
+| `previous` | string | A URL to the previous page of results, or NULL if it does not exist. |
+| `sync_token` | string | An encrypted string which may be used for the sync endpoint. |
+| `products` | nested resource (Product) | A list of Product resources (*See products/*) |
+
++ Model (application/json)
+
+    JSON representation of a Product Search resource.
+
+    + Body
+
+            {
+                "products": [
+                    {
+                     (See Product Model)
+                    },
+                ],
+                "count": 2,
+                "next": null,
+                "previous": null,
+                "sync_token": "MFDLJSDUiFiiuds"
+            }
+            
+### Search for products [GET]
+
++ Parameters
+    + limit: `100` (number, optional) - Limits the results to at most the given value. Necessary for paging.
+        + Default: `1000`
+    + offset: `5` (number, optional) - The index to where the results should begin. Necessary for paging.
+        + Default: `0`
+    + active: 'true' (boolean, optional) - Searches for producs which are marked as active.
+
++ Response 200
+
+    [products/search][]    
+
+## products/sync [/rest/v1/products{?sync_token,limit,offset}]
+Sync provides a simple way to retreive an array of product changes since the last time you performed a sync. To perform a sync, pass the sync token that was returned in a previous sync request as a URL parameter. 
+
+Example:  I want to get all the products in my app.
+First make a GET request to /products/search.
+Infusionsoft will return the products along with a sync token. 
+Now when you want to get a list of products that have been added, deleted, or modified since the sync token was generated, simply make another GET request to /products/sync and pass the 'sync_token' as a parameter.
+
+The Product Sync resource:
+
+| Name | Type | Description |
+| --- | --- | --- |
+| `count` | number | The total count of the results of the search. |
+| `next` | string | A URL to the next page of results, or NULL if it does not exist. |
+| `previous` | string | A URL to the previous page of results, or NULL if it does not exist. |
+| `sync_token` | string | Pass this in as a paremeter to products/sync in order to keep the products information in sync. |
+| `product_statuses` | nested resource (Product Status) | A list of statuses. |
+
+The Product Status nested resource:
+
+| Name | Type | Description |
+| --- | --- | --- |
+| `status` | string | The status opf the product. May be one of: CREATED, UPDATED, or DELETED,  |
+| `product` | nested resource (Product) | *See products/* |
+
++ Model (application/json)
+
+    JSON representation of a Task Status Collection Resource.
+
+    + Body
+    
+            {
+                "product_statuses": [
+                    {
+                        "status": "DELETED",
+                        "product": {
+                             (See Product Model)
+                        }
+                    },
+                    {
+                        "status": "CREATED",
+                        "product": {
+                            (See Product Model)
+                        }
+                    }
+                ],
+                "count": 2,
+                "next": null,
+                "previous": null,
+                "sync_token": "MFDLJSDUiFiiuds"
+            }
+            
+### Sync Products [GET]
+The Sync endpoint returns an array of product statuses based on products updated, created, or deleted since the result set when the sync_token was returned.
+
++ Parameters
+    + sync_token: `MFDLJSDUiFiiuds=` (string, required) - Specify the token from the previous search or sync request to see all products updated, created, and deleted since the last request. 
+    A sync_token may expire, in which case the server will respond with 410 GONE and the client should perform a full synchronization by searching all products. 
+    + limit: `100` (number, optional) - Limits the results to at most the given value. Necessary for paging.
+        + Default: `1000`
+    + offset: `5` (number, optional) - The index to where the results should begin. Necessary for paging.
+        + Default: `0`
+
++ Response 200
+
+    [products/sync][]   
