@@ -1337,47 +1337,6 @@ The Sync endpoint returns an array of orderStatuses based on orders updated, cre
 
     [Orders Sync][]  
 
-## pay_order [/rest/v1/orders/pay_order]
-Provides the ability to make a payment against an existing order -- or a new order -- through an existing merchant account, using a credit card (or token) stored in Infusionsoft.<p>
-Only orders paid through Infusionsoft Payments gateway is supported at this time.<p>
-This endpoint will pay the remaining balance of the order -- Partial payments are not supported at this time.<p>
-To pay an existing order, provide a valid value for 'order_id' in the request body. Otherwise, to place and pay a new order omit 'order_id' and provide a list of order_item.
-as a list for 'order_item' int he request body.
-
-`request` parameters:
-
-| Name | Type | Description | Example | Default |
-| --- | --- | --- | --- | --- |
-| `order_id` | number, optional | The id of the order you wish to make a payment against. If omitted, you must fill the `order_items` parameter, which will create and pay a new order. | { "id" : 1 } ||
-| `title` | string, required | A title for the order. |{ "title" : "Super awesome order" }  ||
-| `contact_id` | number, required | The id of the contact associated with the order | { "contact_id" : 92 } ||
-| `payment_gateway_id` | number, required | The id of the payment gateway account which will process credit card payments | {"payment_gateway_id" : 4} ||
-| `payment_method_type` | string, required | The method of payment. Either `cash` or `credit card` | {"payment_method_type" : "credit card" } ||
-| `payment_method_id` | number, optional | If payment_method_type is `credit card`, you must provide the tokenized card id, otherwise this can be omitted. | {"payment_method_id" : 937123 } ||
-| `note` | string, optional | A note about the payment. | {"note" : "For services rendered" } ||
-| `source` | string, optional | The originating device from which the payment is made. Either `Android` or `iOS` are valid values| {"source" : "Android" } | |
-| `order_items` | list, optional | If order_id was not provided, a list of `order_item`.| *see order_item resource*||
-
-`order_item` resource
-
-| Name | Type | Description | Example | Default |
-| --- | --- | --- | --- | --- |
-| `type` | string, required | The type. Valid values: "Tax", "Subscription", "Product", "Discount", "Tip", or "Other" | { "type" : "Product" } ||
-| `product_id` | number, optional | The id of the product. Required for "Subscription" and "Product" types. | { "product_id" : 5 } ||
-| `subscription_plan_id` | number, optional | The id of the subscription plan. Required for "Subscription" types.| { "subscription_plan_id" : 10 } ||
-| `price` | decimal, required | The amount per unit of the item. For "Discount", positive value is required to indicate the amount to remove from the total. | { "price" : 1.50 } ||
-| `description` | string, optional | The description of the order item. Applies to "Subscription", "Product", "Discount", and "Other" types, Ignored for all other types. | ("description" : "This is a really cool description."}||
-| `name` | string, required | The item name. Required for "Subscription", "Product", and "Other" types. For "Tax" type, it will ovverride the default label, which is "Sales Tax". Ignored for all other types.| { "name" : "Flux Capacitor" } ||
-| `quantity` | number, optional | The item quantity purchased. | { "quantity" : 10 } | `1` |
-
- 
- `response` parameters:
-
-| Name | Type | Description |
-| --- | --- | --- |
-| `success` | boolean | If the payment succeeded.  |
-| `failure_reason` | string | If the payment failed, the reason the payment failed. |
-| `order` | nested resource (order) | Fully qualified order resource (*see order resource*), when the payment succeeded. If the attempt failed, for any reason, it is possible that the order was still generated. In this case, you may be able to re-attempt the payment against the returned order id. |
 
 
 ### Make a payment [POST]
