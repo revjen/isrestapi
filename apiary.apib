@@ -1301,12 +1301,6 @@ The Search endpoint returns an array of orders matching the search parameters yo
 + Response 200
 
     [Orders Collection][] 
-  
-## Order Creation [/rest/v1/orders]
-### Create an Order [POST]
-
-+ Response 201 (application/json)
-    [Order][]
 
 ## Orders Sync [/rest/v1/orders{?sync_token,limit,offset}]
 Sync provides a simple way to retreive an array of order changes since the last time you performed a sync. To perform a sync simply pass the sync token that was returned in a previous GET request as a URL parameter. 
@@ -1336,85 +1330,3 @@ The Sync endpoint returns an array of orderStatuses based on orders updated, cre
 + Response 200
 
     [Orders Sync][]  
-
-
-
-### Make a payment [POST]
-
-
-+ Request (application/json)
-
-        {
-            "title": "Purchase throuh REST",
-            "contact_id": 4,
-            "payment_gateway_id": 235,
-            "payment_method_type": "credit card",
-            "payment_method_id": 1555331931,
-            "note": "Paid via REST API - paid via order items",
-            "source": "iOs",
-            "order_items":[
-                {
-                    "type":"Product",
-                    "product_id": 1,
-                    "price":25.00,
-                    "quantity":2,
-                    "name":"Test Product from REST",
-                    "description":"Color: red text: blah"
-                },
-                {
-                    "type":"Subscription",
-                    "product_id": 2,
-                    "subscription_plan_id": 1,
-                    "price":5.00,
-                    "quantity":1,
-                    "name":"Test subccription from REST",
-                    "description":"blah"
-                },
-                {
-                    "type":"Tax",
-                    "price":2.00,
-                    "name":"Gimme-tax"
-                },
-                {
-                    "type":"Discount",
-                    "description":"10% off order total promo code: SALE",
-                    "price":10.00
-                }, 
-                {
-                    "type":"Tip",
-                    "price":9.00
-                },
-                {
-                    "type":"Other",
-                    "name":"Key Fee",
-                    "Description":"How are you going to drive it?",
-                    "price":19.00
-                }
-
-            ]
-        }
-
-+ Response 200
-
-        {
-            "success": true,
-            "failure_reason: "",
-            "order": {
-                (*see order resource*)
-            }
-            
-        }
-
-
-+ Response 200
-
-        {
-            "success": false,
-            "failure_reason: "The charge was declined",
-            "order": {
-                (*see `order` resource*)
-            }
-            
-        }
-
-    
